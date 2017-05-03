@@ -118,6 +118,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/samuel/Documents/Multi-tier-Robot-System/ROS/build/gtest/cmake_install.cmake")
   include("/home/samuel/Documents/Multi-tier-Robot-System/ROS/build/multi_tier_robot_system/cmake_install.cmake")
+  include("/home/samuel/Documents/Multi-tier-Robot-System/ROS/build/usb_cam/cmake_install.cmake")
 
 endif()
 

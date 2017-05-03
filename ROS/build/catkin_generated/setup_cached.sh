@@ -8,4 +8,3 @@
 
 # modified environment variables
 export PWD="/home/samuel/Documents/Multi-tier-Robot-System/ROS/build"
-export PYTHONPATH="/home/samuel/Documents/Multi-tier-Robot-System/ROS/devel/lib/python2.7/dist-packages:$PYTHONPATH"

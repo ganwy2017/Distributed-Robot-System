@@ -1,0 +1,8 @@
+prefix=/home/samuel/Documents/Multi-tier-Robot-System/ROS/install
+
+Name: usb_cam
+Description: Description of usb_cam
+Version: 0.3.4
+Cflags: -I/home/samuel/Documents/Multi-tier-Robot-System/ROS/install/include
+Libs: -L/home/samuel/Documents/Multi-tier-Robot-System/ROS/install/lib -lusb_cam
+Requires: 
