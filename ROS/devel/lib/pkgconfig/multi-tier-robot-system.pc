@@ -1,0 +1,8 @@
+prefix=/home/samuel/Documents/Multi-tier-Robot-System/ROS/devel
+
+Name: multi-tier-robot-system
+Description: Description of multi-tier-robot-system
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/samuel/Documents/Multi-tier-Robot-System/ROS/devel/lib 
+Requires: 
