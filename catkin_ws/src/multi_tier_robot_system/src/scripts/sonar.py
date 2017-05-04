@@ -22,7 +22,7 @@ class Sonar(object):
         self.buggy_nb = buggy_nb                        # Buggy id number
         self.data = 150                                 # Measured value of sensor (cm)
         self._callback = GetMessage()
-        topic = "buggy" + str(buggy_nb) + "/sonar/" + str(nb)
+        topic = "buggy" + str(buggy_nb) + "/sonar" + str(nb)
         self.subscribe(topic)
 
     # Subscribe to a given topic

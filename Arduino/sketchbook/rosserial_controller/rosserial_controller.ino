@@ -63,9 +63,9 @@ std_msgs::Int32 sonarMessage2;
 std_msgs::Int32 sonarMessage3; 
 
 // Init ROS publishers
-ros::Publisher pubSonar1("sonar1", &sonarMessage1);                             
-ros::Publisher pubSonar2("sonar2", &sonarMessage2);
-ros::Publisher pubSonar3("sonar3", &sonarMessage3);
+ros::Publisher pubSonar1("buggy0/sonar0", &sonarMessage1);                             
+ros::Publisher pubSonar2("buggy0/sonar1", &sonarMessage2);
+ros::Publisher pubSonar3("buggy0/sonar2", &sonarMessage3);
  
 // Create sonar objects  
 UltraSound sonar1(trigPin1, echoPin1);                                         

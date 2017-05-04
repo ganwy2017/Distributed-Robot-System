@@ -12,8 +12,8 @@ export ROS_IP=$local_ip
 export ROS_HOSTNAME=$local_ip
 
 cd catkin_ws/src/multi_tier_robot_system/src/
-rosrun multi_tier_robot_system serial_node.py /dev/ttyACM0 &
-rosrun multi_tier_robot_system encoder_node.py
+rosrun multi_tier_robot_system serial_node.py /dev/ttyACM0
+
 
 
 
