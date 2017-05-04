@@ -42,7 +42,7 @@ class EncoderNode(object):
         rospy.init_node(self.node_name, anonymous=True)     # Initialise node
         publishers = []                                     # Initialise list of publishers
         for i in range(self.n):                             # Fill list of publishers
-            topic = "buggy" + str(buggy_nb) + "/encoder/" + str(i)
+            topic = "buggy" + str(buggy_nb) + "/encoder" + str(i)
             publishers.append(rospy.Publisher(topic, Int64, queue_size=1))
         r = rospy.Rate(self.rate)
         try:
