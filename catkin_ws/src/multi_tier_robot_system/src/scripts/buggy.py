@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
-import rospy
 import pygame
 import numpy as np
 import math
 
-from scripts.get_message import GetMessage
-from std_msgs.msg import Int64
 from scripts.motors import Motors
 from scripts.grid import Grid
 

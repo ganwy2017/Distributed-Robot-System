@@ -1,0 +1,6 @@
+name: "buggy0"
+sonar0: {"direction": 0, "position": (0, 9)}
+sonar1: {"direction": 90, "position": (6, 9)}
+sonar2: {"direction": 270, "position": (-6, 9)}
+encoder0: {}
+encoder1: {}
