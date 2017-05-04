@@ -1,28 +1,25 @@
 #!/usr/bin/env python
 
 import rospy
-from get_data import GetData
+from get_message import GetMessage
 from std_msgs.msg import Int64
 
-class Encoder():
 
-	def __init__(self, nb, buggy_nb=0, step=17.5 / 18):
-		self.nb = nb 												# Encoder id number
-		self.step = step	 										# Distance travelled per click
-		self.count = 0												# Encoder count
-		self._callback = GetData() 									# Callback (private)
-		topic = "buggy" + str(buggy_nb) + "/encoder/" + str(nb)		# i.e. buggy0/encoder/0
-		self.subscribe(topic) 										# Subscrive to topic
+class Encoder(object):
 
-	# Subscribe to a given topic
-	def subscribe(self, topic):
-		rospy.Subscriber(topic, Int64, self._callback)
+    def __init__(self, nb, buggy_nb=0, step=17.5 / 18):
+        self.nb = nb 												# Encoder id number
+        self.step = step	 										# Distance travelled per click
+        self.count = 0												# Encoder count
+        self._callback = GetMessage() 								# Callback (private)
+        topic = "buggy" + str(buggy_nb) + "/encoder/" + str(nb)		# i.e. buggy0/encoder/0
+        self.subscribe(topic) 										# Subscrive to topic
 
-	# Read and return encoder data
-	def read(self):
-		self.count = self._callback.get_msg().data
-		return self.count
+    # Subscribe to a given topic
+    def subscribe(self, topic):
+        rospy.Subscriber(topic, Int64, self._callback)
 
-
-if __name__ == "__main__":
-	Encoder()
+    # Read and return encoder data
+    def read(self):
+        self.count = self._callback.get_msg().data
+        return self.count

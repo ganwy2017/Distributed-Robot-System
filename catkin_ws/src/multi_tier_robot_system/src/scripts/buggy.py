@@ -2,13 +2,13 @@
 
 import rospy
 import pygame
-from math import sin, cos, atan, pi
-from get_data import GetData
+import numpy as np
+import math
+
+from scripts.get_message import GetMessage
 from std_msgs.msg import Int64
-from motors import Motors
-from numpy import mean, array
-from grid import Grid
-# from buggy_project.msg import Drive
+from scripts.motors import Motors
+from scripts.grid import Grid
 
 
 class Buggy(object):
@@ -27,10 +27,10 @@ class Buggy(object):
     
     # Update buggy position and angle
     def update(self):
-        disp = self._get_dislpacement()
+        disp = self._get_displacement()
         # self.angle = gyro.read()
-        x = disp * sin(-self.angle)
-        y = disp * cos(-self.angle)
+        x = disp * math.sin(-self.angle)
+        y = disp * math.cos(-self.angle)
         self.pos = [self.pos[0] + x, self.pos[1] + y]
         for sonar in self.sonars: 
             sonar.update(self.pos, self.angle)  
@@ -57,19 +57,19 @@ class Buggy(object):
         outline = []                                                            # Initialise outline of buggy
         for point in self.body:                                                 # For every point in the outline
             if point[0]:                                                        # If point != 0
-                angle = atan(-float(point[1]) / float(point[0])) - self.angle   # Calculate angle
+                angle = math.atan(-float(point[1]) / float(point[0])) - self.angle   # Calculate angle
             else:                                                               # Else avoid divide by zero
                 angle = 90.0 - self.angle                                       # atan(x/0) = 90
             if point[0] < 0:                                                    # If x coord of point is less than zero
-                angle += pi                                                     # Flip by 180 degrees
+                angle += math.pi                                                # Flip by 180 degrees
             l = (point[0] ** 2 + point[1] ** 2) ** 0.5                          # Hypotenuse of point
-            x = round(l * cos(angle), 0) * scale + pos[0]                       # Rotate and shift x                           
-            y = round(-l * sin(angle), 0) * scale + pos[1]                      # -l because of pixel coordinate system
+            x = round(l * math.cos(angle), 0) * scale + pos[0]                  # Rotate and shift x
+            y = round(-l * math.sin(angle), 0) * scale + pos[1]                 # -l because of pixel coordinate system
             outline.append([x, y])                                              # Append coord to outline
         return outline                                                              
 
     # Get displacement since this was last called
-    def _get_dislpacement(self):
+    def _get_displacement(self):
         twisting = self.motors.left_dir != self.motors.right_dir
         encoder_data = [float(encoder.read()) for encoder in self.encoders]
         encoder_step = [float(encoder.step) for encoder in self.encoders]
@@ -77,13 +77,8 @@ class Buggy(object):
             self.encoder_last = encoder_data
             disp = 0
         else:
-            disp = array(encoder_data) - array(self.encoder_last)               # Number of clicks since last checked
-            disp *= array(encoder_step)                                         # Multiply by distance travelled per click
-            disp = mean(disp)                                                   # Take mean encoder value
+            disp = np.array(encoder_data) - np.array(self.encoder_last)         # Number of clicks since last checked
+            disp *= np.array(encoder_step)                                      # Multiply by distance travelled per click
+            disp = np.mean(disp)                                                # Take mean encoder value
             self.encoder_last = encoder_data
-        # print twisting, disp
         return disp
-
-
-if __name__ == "__main__":
-    Buggy()

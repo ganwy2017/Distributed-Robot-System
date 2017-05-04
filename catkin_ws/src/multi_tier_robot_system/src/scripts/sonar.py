@@ -2,9 +2,11 @@
 
 import rospy
 import pygame
-from math import cos, sin, atan, pi, sqrt
+import math
 from std_msgs.msg import Int64
-from get_data import GetData
+
+# My modules
+from get_message import GetMessage
 
 
 class Sonar(object):
@@ -19,7 +21,7 @@ class Sonar(object):
         self.eff_angle = eff_angle                      # Effective angle of sonar (rad)
         self.buggy_nb = buggy_nb                        # Buggy id number
         self.data = 150                                 # Measured value of sensor (cm)
-        self._callback = GetData()
+        self._callback = GetMessage()
         topic = "buggy" + str(buggy_nb) + "/sonar/" + str(nb)
         self.subscribe(topic)
 
@@ -27,7 +29,7 @@ class Sonar(object):
     def subscribe(self, topic):
         rospy.Subscriber(topic, Int64, self._callback)
         
-    # Update global coordinates of sensor given bugggy position and angle and return sensor reading
+    # Update global coordinates of sensor given buggy position and angle and return sensor reading
     def update(self, buggy_pos, buggy_angle): 
         self.global_pos = self._transform(buggy_pos, buggy_angle)
         self.global_angle = self.local_angle + buggy_angle
@@ -42,8 +44,8 @@ class Sonar(object):
         if self.data > 3:
             data = self.data * scale
             rect = (pos[0] - data, pos[1] - data, 2 * data, 2 * data)
-            start_angle =  - self.eff_angle - angle + pi / 2
-            end_angle = self.eff_angle - angle + pi / 2
+            start_angle = - self.eff_angle - angle + math.pi / 2
+            end_angle = self.eff_angle - angle + math.pi / 2
             pygame.draw.arc(display, self.col, rect, start_angle, end_angle, 2)     # Draw sensor arc  
 
     # Transform sensor body given buggy position, angle (and scale for drawing purposes)
@@ -57,16 +59,15 @@ class Sonar(object):
         local_x = float(self.local_pos[0])
         local_y = float(self.local_pos[1])
         if local_y:                                   
-            angle = atan(local_x / local_y) + buggy_angle
+            angle = math.atan(local_x / local_y) + buggy_angle
         else:
             if local_x > 0:
-                angle = buggy_angle + pi
-            if local_x < 0:
-                angle = buggy_angle - pi
+                angle = buggy_angle + math.pi
+            elif local_x < 0:
+                angle = buggy_angle - math.pi
             else:
                 angle = buggy_angle
-        l = sqrt(local_x ** 2 + local_y ** 2)
-        x = round(l * sin(angle) * scale + buggy_x, 0)
-        y = round(flip * l * cos(angle) * scale + buggy_y, 0) 
+        l = math.sqrt(local_x ** 2 + local_y ** 2)
+        x = round(l * math.sin(angle) * scale + buggy_x, 0)
+        y = round(flip * l * math.cos(angle) * scale + buggy_y, 0)
         return [x, y]                                             
-
