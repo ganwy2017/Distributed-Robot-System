@@ -1,6 +1,0 @@
-set(multi_tier_robot_system_SETUP_PY_VERSION "0.0.0")
-set(multi_tier_robot_system_SETUP_PY_SCRIPTS "")
-set(multi_tier_robot_system_SETUP_PY_PACKAGES "multi_tier_robot_system")
-set(multi_tier_robot_system_SETUP_PY_PACKAGE_DIRS "src/multi_tier_robot_system")
-set(multi_tier_robot_system_SETUP_PY_MODULES "")
-set(multi_tier_robot_system_SETUP_PY_MODULE_DIRS "")
