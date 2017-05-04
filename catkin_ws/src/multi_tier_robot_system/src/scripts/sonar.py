@@ -3,7 +3,7 @@
 import rospy
 import pygame
 import math
-from std_msgs.msg import Int64
+from std_msgs.msg import Int32
 
 # My modules
 from get_message import GetMessage
@@ -27,7 +27,7 @@ class Sonar(object):
 
     # Subscribe to a given topic
     def subscribe(self, topic):
-        rospy.Subscriber(topic, Int64, self._callback)
+        rospy.Subscriber(topic, Int32, self._callback)
         
     # Update global coordinates of sensor given buggy position and angle and return sensor reading
     def update(self, buggy_pos, buggy_angle): 
