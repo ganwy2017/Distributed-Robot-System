@@ -10,6 +10,7 @@
 
 #include <ros.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Int64.h>
 
 // Custom libraries
 #include <buggy_project/Drive.h>
