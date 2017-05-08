@@ -55,7 +55,7 @@ void driveCallback(const buggy_project::Drive& drive_msg)
 ros::NodeHandle nh;
 
 // Init Subscriber                                                            
-ros::Subscriber <buggy_project::Drive> subDrive("drive", driveCallback);  
+ros::Subscriber <buggy_project::Drive> subDrive("buggy0/drive", driveCallback);  
 
 // Init ROS messages     
 std_msgs::Int32 sonarMessage1;    
