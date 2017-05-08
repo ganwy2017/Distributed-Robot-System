@@ -34,29 +34,18 @@
 
 void driveCallback(const buggy_project::Drive& drive_msg)
 {
-  int left = drive_msg.left;
-  int right = drive_msg.right;
-  int leftDir = HIGH;
-  int rightDir = HIGH;
-  if (left < 0){
-    left *= -1;
-    int leftDir = LOW;
-  }
-  if (right < 0){
-    right *= -1;
-    int rightDir = LOW;
-  }
-  digitalWrite(dirPinL, leftDir);
-  digitalWrite(dirPinR, rightDir);
-  analogWrite(drivePinL, leftDir);
-  analogWrite(drivePinR, rightDir);
+  digitalWrite(dirPinL, drive_msg.left_dir);
+  digitalWrite(dirPinR, drive_msg.right_dir);
+  analogWrite(drivePinL, drive_msg.left);
+  analogWrite(drivePinR, drive_msg.right);
 }
 
 // Init ROS node
 ros::NodeHandle nh;
 
 // Init Subscriber                                                            
-ros::Subscriber <buggy_project::Drive> subDrive("buggy0/drive", driveCallback);  
+ros::Subscriber <buggy_project::Drive> subDrive("buggy0/drive", driveCallback);
+
 
 // Init ROS messages     
 std_msgs::Int32 sonarMessage1;    
