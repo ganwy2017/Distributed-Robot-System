@@ -2,7 +2,6 @@
 
 import rospy
 import RPi.GPIO as GPIO
-from time import sleep
 from std_msgs.msg import Int64
 
 

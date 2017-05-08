@@ -1,7 +1,9 @@
 #! /usr/bin/env python
 
 # Standard libraries
+import yaml
 import rospy
+import math
 import pygame
 
 # My libraries/ Modules
@@ -53,10 +55,9 @@ class LaptopNode(object):
         self.key_status = {} 											    # Initialise status of keys
         [self.key_status.update({key: False}) for key in key_dict]  	    # Fill key dictionary
 
-        # Buggy
-        sonars = [Sonar(pos=(-6, 9))]									    # Make sonar list for buggy
-        encoders = [Encoder(0), Encoder(1)] 							    # Make encoder list for buggy
-        self.buggy = Buggy(angle=0, sonars=sonars, encoders=encoders)	    # Initialise buggy
+        # Buggies
+        self.buggy = None
+        self.create_buggies()
         self.main()
 
     # Checks key events and writes to key_status dictionary
@@ -74,6 +75,22 @@ class LaptopNode(object):
                     if event.key == value:
                         self.key_status[key] = False				        # Update key_status dictionary
                         break
+
+    def create_buggies(self):
+        f = open("config/buggy.yaml")
+        config = yaml.safe_load(f)
+        f.close()
+        for _, setup in config.iteritems():
+            sonars = []
+            encoders = []
+            for key, value in setup.iteritems():
+                if "sonar" in key:
+                    sonars.append(Sonar(nb=setup[key]["number"],
+                                        pos=setup[key]["position"],
+                                        angle=math.radians(setup[key]["angle"])))
+                if "encoder" in key:
+                    encoders.append(Encoder(nb=setup[key]["number"]))
+            self.buggy = Buggy(sonars=sonars, encoders=encoders)
 
     # Handle drawing the correct page
     def update_window(self):

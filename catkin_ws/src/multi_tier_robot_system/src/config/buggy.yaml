@@ -1,6 +1,18 @@
-name: "buggy0"
-sonar0: {"direction": 0, "position": (0, 9)}
-sonar1: {"direction": 90, "position": (6, 9)}
-sonar2: {"direction": 270, "position": (-6, 9)}
-encoder0: {}
-encoder1: {}
+buggy0:
+  name: "Buggy0"
+  sonar0:
+    angle: 0
+    position: [0, 9]
+    number: 0
+  sonar1:
+    angle: 90
+    position: [6, 7]
+    number: 1
+  sonar2:
+    angle: 270
+    position: [-6, 7]
+    number: 2
+  encoder0:
+    number: 0
+  encoder1:
+    number: 1
