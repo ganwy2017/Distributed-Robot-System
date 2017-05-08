@@ -29,9 +29,9 @@ class Grid(object):
     # Draw grid lines
     def _draw_grid_lines(self, display, origin, rect, col, scale):
         l = origin[0] - self.res * self.size / 2 * scale
-        r = origin[0] + self.res * self.size / 2 * scale
+        # r = origin[0] + self.res * self.size / 2 * scale
         t = origin[1] - self.res * self.size / 2 * scale
-        b = origin[1] + self.res * self.size / 2 * scale
+        # b = origin[1] + self.res * self.size / 2 * scale
         max_l = rect[0]
         max_r = rect[0] + rect[2]
         max_t = rect[1]
