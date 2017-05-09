@@ -16,6 +16,7 @@ class Buggy(object):
         self.pos = pos                                           
         self.angle = angle
         self.grid = Grid(40, res)
+        self.servo_angle = 0
         self.sonars = sonars
         self.encoders = encoders
         self.servos = servos
@@ -24,7 +25,9 @@ class Buggy(object):
         self.body = ((-6, -9), (6, -9), (6, 9), (-6, 9)) 
     
     # Update buggy position and angle
-    def update(self):
+    def update(self, servo_change):
+        self.servo_angle += servo_change
+        self._limit_servo_angle()
         disp = self._get_displacement()
         # self.angle = gyro.read()
         x = disp * math.sin(-self.angle)
@@ -33,8 +36,14 @@ class Buggy(object):
         for sonar in self.sonars: 
             sonar.update(self.pos, self.angle)
         for servo in self.servos:
-            servo.move(0)
+            servo.move(self.servo_angle)
         self.grid.update(self.sonars)
+
+    def _limit_servo_angle(self):
+        if self.servo_angle > 90:
+            self.servo_angle = 90
+        elif self.servo_angle < -90:
+            self.servo_angle = -90
 
         # Publish motor drive values
     def drive(self, left, right):

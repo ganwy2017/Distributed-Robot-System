@@ -129,6 +129,15 @@ class LaptopNode(object):
             right = 0
         return left, right
 
+    def keypress2servo(self):
+        if self.key_status["k_a"]:
+            angle = -1.0
+        elif self.key_status["k_d"]:
+            angle = 1.0
+        else:
+            angle = 0
+        return angle
+
     def main(self):
         self.update_window()
         while not self.quit:
@@ -136,7 +145,8 @@ class LaptopNode(object):
             if self.mode == "manual":
                 left, right = self.keypress2drive()
                 self.buggy.drive(left, right)
-            self.buggy.update()
+            delta_servo_angle = self.keypress2servo()
+            self.buggy.update(delta_servo_angle)
             self.update_window()
 
 

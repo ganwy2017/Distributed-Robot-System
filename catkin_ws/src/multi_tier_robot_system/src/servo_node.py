@@ -17,7 +17,7 @@ class ServoNode(object):
         self.data_pins = data_pins
         self.buggy_nb = buggy_nb
         self.node_name = node_name
-        self.rate = 50
+        self.rate = 1
         self.pwms = []
         self.setup_pins()
         self.main()
