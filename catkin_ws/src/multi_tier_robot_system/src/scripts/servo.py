@@ -24,7 +24,7 @@ class Servo(object):
 
     def _update(self):
         self._deg2pwm()
-        if self.pwm < 2000:
-            self.pwm = 2000
-        elif self.pwm > 1000:
+        if self.pwm < 1000:
             self.pwm = 1000
+        elif self.pwm > 2000:
+            self.pwm = 2000
