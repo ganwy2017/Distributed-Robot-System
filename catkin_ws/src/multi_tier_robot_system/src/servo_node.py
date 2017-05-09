@@ -20,7 +20,7 @@ class ServoNode(object):
     def callback(self, message, args):
         pin = args[0]
         print message.data
-        self.pi.set_servo_pulswidth(pin, message.data)
+        self.pi.set_servo_pulsewidth(pin, message.data)
 
     def setup_pins(self):
         for pin in self.data_pins:
