@@ -51,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="servo.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="servo.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/servo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="8" column="42" lean-forward="true" selection-start-line="8" selection-start-column="42" selection-end-line="8" selection-end-column="42" />
+            <state relative-caret-position="504">
+              <caret line="28" column="29" lean-forward="true" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
               <folding>
                 <element signature="e#23#35#0" expanded="true" />
               </folding>
@@ -85,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="servo_node.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="servo_node.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/servo_node.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+            <state relative-caret-position="324">
+              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding>
                 <element signature="e#23#35#0" expanded="true" />
               </folding>
@@ -149,11 +149,11 @@
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/encoder_node.py" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/motors.py" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/sonar.py" />
-        <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/servo.py" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/config/buggy.yaml" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/laptop_node.py" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/buggy.py" />
         <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/servo_node.py" />
+        <option value="$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/servo.py" />
       </list>
     </option>
   </component>
@@ -519,16 +519,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/servo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="42" lean-forward="true" selection-start-line="8" selection-start-column="42" selection-end-line="8" selection-end-column="42" />
-          <folding>
-            <element signature="e#23#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/config/buggy.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -579,8 +569,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/servo_node.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+        <state relative-caret-position="324">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <element signature="e#23#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/multi_tier_robot_system/src/scripts/servo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="29" lean-forward="true" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
           <folding>
             <element signature="e#23#35#0" expanded="true" />
           </folding>
