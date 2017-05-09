@@ -12,7 +12,7 @@ class Encoder(object):
         self.step = step	 										# Distance travelled per click
         self.count = 0												# Encoder count
         self._callback = GetMessage() 								# Callback (private)
-        topic = "buggy" + str(buggy_nb) + "/encoder" + str(nb)		# i.e. buggy0/encoder/0
+        topic = "buggy" + str(buggy_nb) + "/encoder" + str(nb)		# i.e. buggy0/encoder0
         self.subscribe(topic) 										# Subscribe to topic
 
     # Subscribe to a given topic
