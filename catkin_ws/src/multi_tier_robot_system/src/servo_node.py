@@ -1,45 +1,41 @@
 #!/usr/bin/env python
 
 import rospy
-import RPi.GPIO as GPIO
+import pigpio
 from std_msgs.msg import Float32
 
-
-def callback(message, args):
-    pwm = args[0]
-    print message.data
-    pwm.ChangeDutyCycle(message.data)
-
-
 class ServoNode(object):
+
     def __init__(self, servo_numbers, data_pins, buggy_nb, node_name="servo_node"):
         self.servo_numbers = servo_numbers
         self.data_pins = data_pins
         self.buggy_nb = buggy_nb
         self.node_name = node_name
-        self.rate = 1
-        self.pwms = []
+        self.rate = 10
         self.setup_pins()
+        self.pi = pigpio.pi()
         self.main()
 
+    def callback(self, message, args):
+        pin = args[0]
+        print message.data
+        self.pi.set_servo_pulswidth(pin, message.data)
+
     def setup_pins(self):
-        GPIO.setmode(GPIO.BCM)                                              # Use BCM numbering system
         for pin in self.data_pins:
-            GPIO.setup(pin, GPIO.OUT)                                       # Set pins to output
-            pwm = GPIO.PWM(pin, 50)
-            pwm.start(7.5)                                                  # Move servo to centre position
-            self.pwms.append(pwm)
+            self.pi.set_mode(pin, pigpio.OUTPUT)                            # Set pins to output
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)                     # Initialise node
-        for nb, pwm in zip(* (self.servo_numbers, self.pwms)):              # Fill list of publishers
+        for nb, pin in zip(* (self.servo_numbers, data_pins)):              # Fill list of publishers
             topic = "buggy" + str(self.buggy_nb) + "/servo" + str(nb)
-            rospy.Subscriber(topic, Float32, callback, [pwm])
+            rospy.Subscriber(topic, Float32, self.callback, [pin])
         r = rospy.Rate(self.rate)
         while True:
             r.sleep()
-        # GPIO.cleanup()  # Return channels to defaults
-
+        # for pin in self.data_pins:
+        #     self.pi.set_servo_pulsewidth(pin, 0)
+        # self.pi.stop()
 
 if __name__ == "__main__":
     buggy_nb = 0

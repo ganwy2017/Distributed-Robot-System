@@ -93,7 +93,8 @@ class LaptopNode(object):
                 if "encoder" in key:
                     encoders.append(Encoder(nb=setup[key]["number"]))
                 if "servo" in key:
-                    servos.append(Servo(nb=setup[key]["number"]))
+                    servos.append(Servo(nb=setup[key]["number"],
+                                        orientation=setup[key]["orientation"]))
             self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos)
 
     # Handle drawing the correct page
@@ -131,12 +132,18 @@ class LaptopNode(object):
 
     def keypress2servo(self):
         if self.key_status["k_a"]:
-            angle = -1.0
+            yaw = -1.0
         elif self.key_status["k_d"]:
-            angle = 1.0
+            yaw = 1.0
         else:
-            angle = 0
-        return angle
+            yaw = 0
+        if self.key_status["k_w"]:
+            pitch = 1.0
+        elif self.key_status["k_s"]:
+            pitch = -1.0
+        else:
+            pitch = 0
+        return {"pitch": pitch, "yaw": yaw}
 
     def main(self):
         self.update_window()
@@ -145,8 +152,8 @@ class LaptopNode(object):
             if self.mode == "manual":
                 left, right = self.keypress2drive()
                 self.buggy.drive(left, right)
-            delta_servo_angle = self.keypress2servo()
-            self.buggy.update(delta_servo_angle)
+            delta_servo_dict = self.keypress2servo()
+            self.buggy.update(delta_servo_dict)
             self.update_window()
 
 

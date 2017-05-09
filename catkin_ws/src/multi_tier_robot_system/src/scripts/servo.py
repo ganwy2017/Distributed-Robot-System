@@ -6,14 +6,15 @@ from std_msgs.msg import Float32
 
 class Servo(object):
 
-    def __init__(self, nb):
+    def __init__(self, nb, orientation="yaw"):
         self.pos = 0
         self.pwm = 0
+        self.orientation = orientation
         topic = "buggy" + str(nb) + "/servo0"
         self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 
     def _deg2pwm(self):
-        self.pwm = self.pos / 36.0 + 7.5
+        self.pwm = self.pos * 500.0 / 90.0 + 1500
 
     # Publish servo position
     def move(self, pos):

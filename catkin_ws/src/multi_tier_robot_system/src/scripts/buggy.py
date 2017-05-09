@@ -26,8 +26,8 @@ class Buggy(object):
     
     # Update buggy position and angle
     def update(self, servo_change):
-        self.servo_angle += servo_change
-        self._limit_servo_angle()
+        self.servo_angle_dict += servo_change
+        self._limit_servo_angles()
         disp = self._get_displacement()
         # self.angle = gyro.read()
         x = disp * math.sin(-self.angle)
@@ -36,13 +36,13 @@ class Buggy(object):
         for sonar in self.sonars: 
             sonar.update(self.pos, self.angle)
         for servo in self.servos:
-            servo.move(self.servo_angle)
+            servo.move(self.servo_angle_dict[servo.orientation])
         self.grid.update(self.sonars)
 
-    def _limit_servo_angle(self):
-        if self.servo_angle > 90:
+    def _limit_servo_angles(self):
+        if self.servo_angle_dict["yaw"] > 90:
             self.servo_angle = 90
-        elif self.servo_angle < -90:
+        elif self.servo_angle_dict["yaw"] < -90:
             self.servo_angle = -90
 
         # Publish motor drive values
