@@ -23,10 +23,6 @@ class Sonar(object):
         self.data = 150                                 # Measured value of sensor (cm)
         self._callback = GetMessage()
         topic = "buggy" + str(buggy_nb) + "/sonar" + str(nb)
-        self.subscribe(topic)
-
-    # Subscribe to a given topic
-    def subscribe(self, topic):
         rospy.Subscriber(topic, Int32, self._callback)
         
     # Update global coordinates of sensor given buggy position and angle and return sensor reading

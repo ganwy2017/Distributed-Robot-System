@@ -10,7 +10,7 @@ from scripts.grid import Grid
 
 class Buggy(object):
 
-    def __init__(self, nb=0, col=(0, 0, 0), pos=(0, 0), angle=0, sonars=None, encoders=None, res=20):
+    def __init__(self, nb=0, col=(0, 0, 0), pos=(0, 0), angle=0, sonars=None, encoders=None, servos=None, res=20):
         self.nb = nb                                              
         self.col = col
         self.pos = pos                                           
@@ -18,6 +18,7 @@ class Buggy(object):
         self.grid = Grid(40, res)
         self.sonars = sonars
         self.encoders = encoders
+        self.servos = servos
         self.motors = Motors(nb)
         self.encoder_last = [encoder.read() for encoder in encoders]    # For removing offset
         self.body = ((-6, -9), (6, -9), (6, 9), (-6, 9)) 
@@ -30,7 +31,9 @@ class Buggy(object):
         y = disp * math.cos(-self.angle)
         self.pos = [self.pos[0] + x, self.pos[1] + y]
         for sonar in self.sonars: 
-            sonar.update(self.pos, self.angle)  
+            sonar.update(self.pos, self.angle)
+        for servo in self.servos:
+            servo.move(0)
         self.grid.update(self.sonars)
 
         # Publish motor drive values

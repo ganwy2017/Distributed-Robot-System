@@ -17,6 +17,7 @@ from scripts.keyboard_dict import key_dict			# Import dictionary of key values
 from scripts.buggy import Buggy 				    # Import Buggy object
 from scripts.sonar import Sonar 				    # Import sonar object
 from scripts.encoder import Encoder                 # Import Encoder object
+from scripts.servo import Servo                     # Import Servo object
 
 """
 TODO:
@@ -77,12 +78,13 @@ class LaptopNode(object):
                         break
 
     def create_buggies(self):
-        f = open("config/buggy.yaml")
-        config = yaml.safe_load(f)
-        f.close()
+        config_file = open("config/buggy.yaml")
+        config = yaml.safe_load(config_file)
+        config_file.close()
         for _, setup in config.iteritems():
             sonars = []
             encoders = []
+            servos = []
             for key, value in setup.iteritems():
                 if "sonar" in key:
                     sonars.append(Sonar(nb=setup[key]["number"],
@@ -90,7 +92,9 @@ class LaptopNode(object):
                                         angle=math.radians(setup[key]["angle"])))
                 if "encoder" in key:
                     encoders.append(Encoder(nb=setup[key]["number"]))
-            self.buggy = Buggy(sonars=sonars, encoders=encoders)
+                if "servo" in key:
+                    servos.append(Servo(nb=setup[key]["number"]))
+            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos)
 
     # Handle drawing the correct page
     def update_window(self):

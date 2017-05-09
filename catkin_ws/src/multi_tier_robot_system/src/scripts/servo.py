@@ -1,20 +1,29 @@
 #!/usr/bin/env python
 
 import rospy
+from std_msgs.msg import Float32
 
 
-class Motors(object):
+class Servo(object):
 
     def __init__(self, nb):
         self.pos = 0
-        # self.message = Drive()
+        self.pwm = 0
         topic = "buggy" + str(nb) + "/servo0"
-        # self.publisher = rospy.Publisher(topic, Drive, queue_size=1)
+        self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 
-    # Update attributes and publish motor speeds
-    def move(self):
-        pass
+    def _deg2pwm(self):
+        self.pwm = self.pos / 36.0 + 7.5
 
-    # Update attributes given left and right motor speeds
-    def update(self, left, right):
-        pass
+    # Publish servo position
+    def move(self, pos):
+        self.pos = pos
+        self._update()
+        self.publisher.publish(self.pwm)
+
+    def _update(self):
+        self._deg2pwm()
+        if self.pwm < 5:
+            self.pwm = 5
+        elif self.pwm > 10:
+            self.pwm = 10

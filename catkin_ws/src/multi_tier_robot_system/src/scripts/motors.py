@@ -17,7 +17,7 @@ class Motors(object):
 
     # Update attributes and publish motor speeds
     def drive(self, left, right):
-        self.update(left, right)
+        self._update(left, right)
         self.message.left = self.left
         self.message.right = self.right
         self.message.left_dir = self.left_dir
@@ -25,7 +25,7 @@ class Motors(object):
         self.publisher.publish(self.message)
 
     # Update attributes given left and right motor speeds
-    def update(self, left, right):
+    def _update(self, left, right):
         self.left = abs(left)
         self.right = abs(right)
         if left < 0:

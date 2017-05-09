@@ -16,3 +16,5 @@ buggy0:
     number: 0
   encoder1:
     number: 1
+  servo0:
+    number: 0
