@@ -18,7 +18,7 @@ class EncoderNode(object):
         self.clk_last = [GPIO.input(pin) for pin in self.clk]       # Initialise state of each clk
         self.node_name = node_name                                  # Set node name
         self.counter = [0] * self.n                                 # Initialise counter
-        self.rate = 300                                             # Frequency
+        self.rate = 400                                             # Frequency
         self.main()
 
     def setup_pins(self):
