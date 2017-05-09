@@ -4,6 +4,7 @@ import rospy
 import pigpio
 from std_msgs.msg import Float32
 
+
 class ServoNode(object):
 
     def __init__(self, servo_numbers, data_pins, buggy_nb, node_name="servo_node"):
@@ -12,8 +13,8 @@ class ServoNode(object):
         self.buggy_nb = buggy_nb
         self.node_name = node_name
         self.rate = 10
-        self.setup_pins()
         self.pi = pigpio.pi()
+        self.setup_pins()
         self.main()
 
     def callback(self, message, args):

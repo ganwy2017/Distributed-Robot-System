@@ -6,7 +6,7 @@ from std_msgs.msg import Float32
 
 class Servo(object):
 
-    def __init__(self, nb, orientation="yaw"):
+    def __init__(self, nb, orientation=1):
         self.pos = 0
         self.pwm = 0
         self.orientation = orientation

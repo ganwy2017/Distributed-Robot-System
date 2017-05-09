@@ -18,4 +18,4 @@ buggy0:
     number: 1
   servo0:
     number: 0
-    orientation: yaw
+    orientation: 1

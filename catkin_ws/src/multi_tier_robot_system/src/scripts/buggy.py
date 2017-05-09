@@ -3,6 +3,7 @@
 import pygame
 import numpy as np
 import math
+import operator
 
 from scripts.motors import Motors
 from scripts.grid import Grid
@@ -16,7 +17,7 @@ class Buggy(object):
         self.pos = pos                                           
         self.angle = angle
         self.grid = Grid(40, res)
-        self.servo_angle = 0
+        self.servo_angles = [0, 0]
         self.sonars = sonars
         self.encoders = encoders
         self.servos = servos
@@ -26,7 +27,7 @@ class Buggy(object):
     
     # Update buggy position and angle
     def update(self, servo_change):
-        self.servo_angle_dict += servo_change
+        map(operator.add, self.servo_angles, servo_change)
         self._limit_servo_angles()
         disp = self._get_displacement()
         # self.angle = gyro.read()
@@ -36,13 +37,13 @@ class Buggy(object):
         for sonar in self.sonars: 
             sonar.update(self.pos, self.angle)
         for servo in self.servos:
-            servo.move(self.servo_angle_dict[servo.orientation])
+            servo.move(self.servo_angles[servo.orientation])
         self.grid.update(self.sonars)
 
     def _limit_servo_angles(self):
-        if self.servo_angle_dict["yaw"] > 90:
+        if self.servo_angles[1] > 90:
             self.servo_angle = 90
-        elif self.servo_angle_dict["yaw"] < -90:
+        elif self.servo_angles[1] < -90:
             self.servo_angle = -90
 
         # Publish motor drive values

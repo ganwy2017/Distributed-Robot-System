@@ -143,7 +143,7 @@ class LaptopNode(object):
             pitch = -1.0
         else:
             pitch = 0
-        return {"pitch": pitch, "yaw": yaw}
+        return [pitch, yaw]
 
     def main(self):
         self.update_window()
