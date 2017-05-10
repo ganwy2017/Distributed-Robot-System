@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import pygame
+import numpy as np
 from colors import light_gray
 
 
@@ -15,7 +16,7 @@ class HomePage(object):
     def show(self, buggy):
         camera_rect = (self.w / 32, self.h / 16, self.w * 59 / 128, self.h / 2)
         map_rect = (self.w * 65 / 128, self.h / 16, self.w * 59 / 128, self.h / 2)
-        draw_camera(self.window, camera_rect)
+        draw_camera(self.window, camera_rect, buggy)
         draw_map(self.window, map_rect, buggy, buggy.grid, self.scale)
 
 
@@ -39,5 +40,10 @@ def draw_axes(display, rect, origin):
         pygame.draw.line(display, (0, 0, 0), p1, p2, 2) 			# Draw xaxis'
 
 
-def draw_camera(window, rect, boarder_col=(0, 0, 0), frame_width=3):
+def draw_camera(window, rect, buggy, boarder_col=(0, 0, 0), frame_width=3):
     pygame.draw.rect(window, boarder_col, rect, frame_width)
+    image = buggy.get_image()
+    if image:
+        print image
+        image = np.resize(image, (rect[2], rect[3]))
+        pygame.surfarray.blit_array(window, image)

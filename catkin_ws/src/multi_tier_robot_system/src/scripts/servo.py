@@ -6,11 +6,11 @@ from std_msgs.msg import Float32
 
 class Servo(object):
 
-    def __init__(self, nb, orientation=1):
+    def __init__(self, nb, buggy_nb, orientation=1):
         self.pos = 0
         self.pwm = 0
         self.orientation = orientation
-        topic = "buggy" + str(nb) + "/servo0"
+        topic = "buggy" + str(buggy_nb) + "/servo" + str(nb)
         self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 
     def _deg2pwm(self):

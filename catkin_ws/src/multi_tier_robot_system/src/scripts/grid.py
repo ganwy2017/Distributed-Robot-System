@@ -48,7 +48,7 @@ class Grid(object):
                 p2 = (x, max_t)
                 pygame.draw.line(display, col, p1, p2)
 
-    # Draw sqaures that objects have been detected in
+    # Draw squares that objects have been detected in
     def _draw_occupied_cells(self, display, origin, rect, col, scale):
         i0 = self.size / 2 - (origin[0] - rect[0]) / self.res * scale
         j0 = self.size / 2 - (origin[1] - rect[1]) / self.res * scale + 1
@@ -66,7 +66,7 @@ class Grid(object):
 
     # Ensure coordinates are in the grid world
     def _keep_in_grid(self, cell):
-        i , j = cell
+        i, j = cell
         if i < 0:
             i = 0
         elif i >= self.size:

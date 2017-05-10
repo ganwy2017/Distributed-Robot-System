@@ -14,10 +14,11 @@ from scripts.fonts import blackops as font		    # Import blackops from
 from scripts.keyboard_dict import key_dict			# Import dictionary of key values
 
 # Buggy Objects
-from scripts.buggy import Buggy 				    # Import Buggy object
-from scripts.sonar import Sonar 				    # Import sonar object
-from scripts.encoder import Encoder                 # Import Encoder object
-from scripts.servo import Servo                     # Import Servo object
+from scripts.buggy import Buggy 				    # Import Buggy module
+from scripts.sonar import Sonar 				    # Import sonar module
+from scripts.encoder import Encoder                 # Import Encoder module
+from scripts.servo import Servo                     # Import Servo module
+from scripts.camera import Camera                   # Import Camera module
 
 """
 TODO:
@@ -36,7 +37,7 @@ class LaptopNode(object):
 
     def __init__(self):
         # Pygame and window
-        pygame.font.init()
+        pygame.init()
         self.size = (1500, 1000)										    # Set window size
         self.window = pygame.display.set_mode(self.size)				    # Initialise window for app
         pygame.display.set_caption("Robot Control Suite") 				    # Set caption
@@ -84,17 +85,24 @@ class LaptopNode(object):
             sonars = []
             encoders = []
             servos = []
+            cameras = []
             for key, value in setup.iteritems():
                 if "sonar" in key:
-                    sonars.append(Sonar(nb=setup[key]["number"],
+                    sonars.append(Sonar(setup[key]["number"],
+                                        0,
                                         pos=setup[key]["position"],
                                         angle=math.radians(setup[key]["angle"])))
                 if "encoder" in key:
-                    encoders.append(Encoder(nb=setup[key]["number"]))
+                    encoders.append(Encoder(setup[key]["number"],
+                                            0))
                 if "servo" in key:
-                    servos.append(Servo(nb=setup[key]["number"],
+                    servos.append(Servo(setup[key]["number"],
+                                        0,
                                         orientation=setup[key]["orientation"]))
-            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos)
+                if "camera" in key:
+                    cameras.append(Camera(setup[key]["number"],
+                                   0))
+            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos, cameras=cameras)
 
     def _update_window(self):
         rect = (self.size[0] / 64, self.size[1] / 64, self.size[0] * 31 / 32, self.size[1] * 31 / 32)

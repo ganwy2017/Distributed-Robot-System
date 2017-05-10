@@ -7,17 +7,13 @@ from std_msgs.msg import Int64
 
 class Encoder(object):
 
-    def __init__(self, nb, buggy_nb=0, step=17.5 / 18):
+    def __init__(self, nb, buggy_nb, step=17.5 / 18):
         self.nb = nb 												# Encoder id number
         self.step = step	 										# Distance travelled per click
         self.count = 0												# Encoder count
         self._callback = GetMessage() 								# Callback (private)
         topic = "buggy" + str(buggy_nb) + "/encoder" + str(nb)		# i.e. buggy0/encoder0
-        self.subscribe(topic) 										# Subscribe to topic
-
-    # Subscribe to a given topic
-    def subscribe(self, topic):
-        rospy.Subscriber(topic, Int64, self._callback)
+        rospy.Subscriber(topic, Int64, self._callback) 				# Subscribe to topic
 
     # Read and return encoder data
     def read(self):

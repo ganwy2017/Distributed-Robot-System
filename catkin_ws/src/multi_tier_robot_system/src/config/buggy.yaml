@@ -1,5 +1,6 @@
 buggy0:
   name: "Buggy0"
+  number: 0
   sonar0:
     angle: 0
     position: [0, 9]

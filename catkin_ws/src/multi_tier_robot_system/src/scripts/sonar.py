@@ -11,7 +11,7 @@ from get_message import GetMessage
 
 class Sonar(object):
 
-    def __init__(self, nb=0, pos=(0, 0), angle=0, eff_angle=0.17, col=(0, 0, 255), buggy_nb=0):
+    def __init__(self, nb, buggy_nb, pos=(0, 0), angle=0, eff_angle=0.17, col=(0, 0, 255)):
         self.nb = nb
         self.col = col
         self.local_pos = pos                            # Position relative to centre of buggy (cm)

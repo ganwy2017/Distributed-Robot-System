@@ -11,7 +11,8 @@ from scripts.grid import Grid
 
 class Buggy(object):
 
-    def __init__(self, nb=0, col=(0, 0, 0), pos=(0, 0), angle=0, sonars=None, encoders=None, servos=None, res=20):
+    def __init__(self, nb=0, col=(0, 0, 0), pos=(0, 0), angle=0, res=20,
+                 sonars=None, encoders=None, servos=None, cameras=None):
         self.nb = nb                                              
         self.col = col
         self.pos = pos                                           
@@ -21,6 +22,8 @@ class Buggy(object):
         self.sonars = sonars
         self.encoders = encoders
         self.servos = servos
+        self.cameras = cameras
+        self.current_camera = 0
         self.motors = Motors(nb)
         self.encoder_last = [encoder.read() for encoder in encoders]    # For removing offset
         self.body = ((-6, -9), (6, -9), (6, 9), (-6, 9)) 
@@ -39,6 +42,9 @@ class Buggy(object):
         for servo in self.servos:
             servo.move(self.servo_angles[servo.orientation])    # Update all servos
         self.grid.update(self.sonars)                           # Update the grid world
+
+    def get_image(self):
+        return self.cameras[self.current_camera].get_image()
 
     def _update_servo_angles(self, servo_change):
         for i, angle in enumerate(servo_change):
