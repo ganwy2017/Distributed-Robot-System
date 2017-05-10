@@ -12,8 +12,8 @@
 #include <std_msgs/Int32.h>
 
 // Custom libraries
-#include <buggy_project/Drive.h>
 #include <UltraSound.h>
+#include <Drive.h>
 
 // Define pins for motor control
 #define brakePinL 8
@@ -31,20 +31,19 @@
 #define trigPin3 2
 #define echoPin3 10
 
-void driveCallback(const buggy_project::Drive& drive_msg)
+void driveCallback(const multi_tier_robot_system::Drive& message)
 {
-  digitalWrite(dirPinL, drive_msg.left_dir);
-  digitalWrite(dirPinR, drive_msg.right_dir);
-  analogWrite(drivePinL, drive_msg.left);
-  analogWrite(drivePinR, drive_msg.right);
+  digitalWrite(dirPinL, message.left_dir);
+  digitalWrite(dirPinR, message.right_dir);
+  analogWrite(drivePinL, message.left);
+  analogWrite(drivePinR, message.right);
 }
 
 // Init ROS node
 ros::NodeHandle nh;
 
 // Init Subscriber                                                            
-ros::Subscriber <buggy_project::Drive> subDrive("buggy0/drive", driveCallback);
-
+ros::Subscriber <multi_tier_robot_system::Drive> subDrive("buggy0/drive", driveCallback);
 
 // Init ROS messages     
 std_msgs::Int32 sonarMessage1;    

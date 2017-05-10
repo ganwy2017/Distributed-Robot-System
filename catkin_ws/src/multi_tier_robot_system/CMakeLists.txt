@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_runtime
   rospy
   std_msgs
+  cv_bridge
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions

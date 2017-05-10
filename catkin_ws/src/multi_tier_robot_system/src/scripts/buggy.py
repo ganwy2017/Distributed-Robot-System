@@ -26,29 +26,29 @@ class Buggy(object):
         self.body = ((-6, -9), (6, -9), (6, 9), (-6, 9)) 
     
     # Update buggy position and angle
-    def update(self, servo_change):
-        map(operator.add, self.servo_angles, servo_change)
-        self._limit_servo_angles()
-        disp = self._get_displacement()
-        # self.angle = gyro.read()
-        x = disp * math.sin(-self.angle)
-        y = disp * math.cos(-self.angle)
-        self.pos = [self.pos[0] + x, self.pos[1] + y]
+    def update(self, left, right, servo_change):
+        self.motors.drive(left, right)                          # Publish motor control (drive)
+        disp = self._get_displacement()                         # Calculate total displacement
+        # self.angle = gyro.read()                              # Get angle og buggy
+        x = disp * math.sin(-self.angle)                        # Calculate displacement in x
+        y = disp * math.cos(-self.angle)                        # Calculate displacement in y
+        self.pos = [self.pos[0] + x, self.pos[1] + y]           # Calculate the position of the buggy
         for sonar in self.sonars: 
-            sonar.update(self.pos, self.angle)
+            sonar.update(self.pos, self.angle)                  # Update all sonar
+        self._update_servo_angles(servo_change)                 # Update the servo angles
         for servo in self.servos:
-            servo.move(self.servo_angles[servo.orientation])
-        self.grid.update(self.sonars)
+            servo.move(self.servo_angles[servo.orientation])    # Update all servos
+        self.grid.update(self.sonars)                           # Update the grid world
 
-    def _limit_servo_angles(self):
+    def _update_servo_angles(self, servo_change):
+        for i, angle in enumerate(servo_change):
+            if angle == "reset":
+                servo_change[i] = -self.servo_angles[i]
+        self.servo_angles = map(operator.add, self.servo_angles, servo_change)
         if self.servo_angles[1] > 90:
-            self.servo_angle = 90
+            self.servo_angles[1] = 90
         elif self.servo_angles[1] < -90:
-            self.servo_angle = -90
-
-        # Publish motor drive values
-    def drive(self, left, right):
-        self.motors.drive(left, right)
+            self.servo_angles[1] = -90
 
     # Draw buggy given display, position on screen and scale
     def draw(self, display, pos, scale):

@@ -14,7 +14,7 @@ class Servo(object):
         self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 
     def _deg2pwm(self):
-        self.pwm = self.pos * 500.0 / 90.0 + 1500
+        self.pwm = self.pos * 750.0 / 90.0 + 1500
 
     # Publish servo position
     def move(self, pos):
@@ -24,7 +24,7 @@ class Servo(object):
 
     def _update(self):
         self._deg2pwm()
-        if self.pwm < 1000:
-            self.pwm = 1000
-        elif self.pwm > 2000:
-            self.pwm = 2000
+        if self.pwm < 750:
+            self.pwm = 750
+        elif self.pwm > 2250:
+            self.pwm = 2250

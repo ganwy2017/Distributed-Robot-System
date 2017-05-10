@@ -58,11 +58,10 @@ class LaptopNode(object):
 
         # Buggies
         self.buggy = None
-        self.create_buggies()
+        self._create_buggies()
         self.main()
 
-    # Checks key events and writes to key_status dictionary
-    def event_handler(self):
+    def _event_handler(self):
         for event in pygame.event.get():							        # Get all pygame events
             if event.type == pygame.QUIT:							        # If an event is of type quit
                 self.quit = True
@@ -77,7 +76,7 @@ class LaptopNode(object):
                         self.key_status[key] = False				        # Update key_status dictionary
                         break
 
-    def create_buggies(self):
+    def _create_buggies(self):
         config_file = open("config/buggy.yaml")
         config = yaml.safe_load(config_file)
         config_file.close()
@@ -97,8 +96,7 @@ class LaptopNode(object):
                                         orientation=setup[key]["orientation"]))
             self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos)
 
-    # Handle drawing the correct page
-    def update_window(self):
+    def _update_window(self):
         rect = (self.size[0] / 64, self.size[1] / 64, self.size[0] * 31 / 32, self.size[1] * 31 / 32)
         tab_size = (self.size[0] / 8, self.size[1] / 32)
         self.window.fill(colors.white)
@@ -107,8 +105,7 @@ class LaptopNode(object):
             self.home.show(self.buggy)
         pygame.display.update()
 
-    # Convert key presses into drive instructions
-    def keypress2drive(self):
+    def _keypress2drive(self):
         up = self.key_status["k_up"]
         down = self.key_status["k_down"]
         left = self.key_status["k_left"]
@@ -130,11 +127,13 @@ class LaptopNode(object):
             right = 0
         return left, right
 
-    def keypress2servo(self):
+    def _keypress2servo(self):
         if self.key_status["k_a"]:
             yaw = -1.0
         elif self.key_status["k_d"]:
             yaw = 1.0
+        elif self.key_status["k_s"]:
+            yaw = "reset"
         else:
             yaw = 0
         if self.key_status["k_w"]:
@@ -146,15 +145,17 @@ class LaptopNode(object):
         return [pitch, yaw]
 
     def main(self):
-        self.update_window()
+        self._update_window()
         while not self.quit:
-            self.event_handler()
+            self._event_handler()
             if self.mode == "manual":
-                left, right = self.keypress2drive()
-                self.buggy.drive(left, right)
-            delta_servo_dict = self.keypress2servo()
-            self.buggy.update(delta_servo_dict)
-            self.update_window()
+                left, right = self._keypress2drive()
+            elif self.mode == "automatic":
+                left = 0
+                right = 0
+            delta_servo_dict = self._keypress2servo()
+            self.buggy.update(left, right, delta_servo_dict)
+            self._update_window()
 
 
 if __name__ == "__main__":
