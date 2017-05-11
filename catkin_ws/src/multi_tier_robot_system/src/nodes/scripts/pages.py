@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import cv2
 import pygame
 import numpy as np
 from colors import light_gray
@@ -41,9 +42,11 @@ def draw_axes(display, rect, origin):
 
 
 def draw_camera(window, rect, buggy, boarder_col=(0, 0, 0), frame_width=3):
+    frame = buggy.get_frame()
+    if frame is not False:
+        frame = cv2.resize(frame, (rect[2], rect[3]))
+        frame = np.rot90(frame)
+        surf = pygame.surfarray.make_surface(frame)
+        window.blit(surf, (rect[0], rect[1]))
     pygame.draw.rect(window, boarder_col, rect, frame_width)
-    image = buggy.get_image()
-    if image:
-        print image
-        image = np.resize(image, (rect[2], rect[3]))
-        pygame.surfarray.blit_array(window, image)
+

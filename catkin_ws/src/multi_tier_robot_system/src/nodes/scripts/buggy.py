@@ -43,8 +43,8 @@ class Buggy(object):
             servo.move(self.servo_angles[servo.orientation])    # Update all servos
         self.grid.update(self.sonars)                           # Update the grid world
 
-    def get_image(self):
-        return self.cameras[self.current_camera].get_image()
+    def get_frame(self):
+        return self.cameras[self.current_camera].get_frame()
 
     def _update_servo_angles(self, servo_change):
         for i, angle in enumerate(servo_change):

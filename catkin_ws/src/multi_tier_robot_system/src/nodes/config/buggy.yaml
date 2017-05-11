@@ -13,6 +13,14 @@ buggy0:
     angle: 315
     position: [-6, 7]
     number: 2
+  sonar3:
+    angle: 90
+    position: [6, 1]
+    number: 3
+  sonar4:
+    angle: 270
+    position: [-6, 1]
+    number: 4
   encoder0:
     number: 0
   encoder1:

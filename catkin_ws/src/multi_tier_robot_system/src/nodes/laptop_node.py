@@ -20,24 +20,12 @@ from scripts.encoder import Encoder                 # Import Encoder module
 from scripts.servo import Servo                     # Import Servo module
 from scripts.camera import Camera                   # Import Camera module
 
-"""
-TODO:
------
-get resolution
-get sonar devices from user
-sort out window size
-get target destination from user
-calculate grid position from coordinates
-run astar
-convert current pos and target pos into drive
-"""
-
 
 class LaptopNode(object):
 
     def __init__(self):
         # Pygame and window
-        pygame.init()
+        pygame.font.init()
         self.size = (1500, 1000)										    # Set window size
         self.window = pygame.display.set_mode(self.size)				    # Initialise window for app
         pygame.display.set_caption("Robot Control Suite") 				    # Set caption

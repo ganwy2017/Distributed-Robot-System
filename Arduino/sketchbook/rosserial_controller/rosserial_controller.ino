@@ -24,12 +24,16 @@
 #define drivePinR 3
 
 // Define sonar pins 
-#define trigPin1 4
-#define echoPin1 5
-#define trigPin2 6
-#define echoPin2 7
-#define trigPin3 2
-#define echoPin3 10
+#define trigPin0 4
+#define echoPin0 5
+#define trigPin1 6
+#define echoPin1 7
+#define trigPin2 2
+#define echoPin2 10
+#define trigPin3 A4
+#define echoPin3 A5
+#define trigPin4 A2
+#define echoPin4 A3
 
 void driveCallback(const multi_tier_robot_system::Drive& message)
 {
@@ -39,6 +43,14 @@ void driveCallback(const multi_tier_robot_system::Drive& message)
   analogWrite(drivePinR, message.right);
 }
 
+void publishSonar(UltraSound& sonar, ros::Publisher& pub, std_msgs::Int32& message)
+{
+  int pingTime = sonar.ping();
+  int distance = sonar.centimetersInAir(pingTime);
+  message.data = distance;  
+  pub.publish(&message);
+}
+
 // Init ROS node
 ros::NodeHandle nh;
 
@@ -46,19 +58,25 @@ ros::NodeHandle nh;
 ros::Subscriber <multi_tier_robot_system::Drive> subDrive("buggy0/drive", driveCallback);
 
 // Init ROS messages     
+std_msgs::Int32 sonarMessage0;    
 std_msgs::Int32 sonarMessage1;    
-std_msgs::Int32 sonarMessage2;    
-std_msgs::Int32 sonarMessage3; 
+std_msgs::Int32 sonarMessage2;
+std_msgs::Int32 sonarMessage3;    
+std_msgs::Int32 sonarMessage4;  
 
 // Init ROS publishers
-ros::Publisher pubSonar1("buggy0/sonar0", &sonarMessage1);                             
-ros::Publisher pubSonar2("buggy0/sonar1", &sonarMessage2);
-ros::Publisher pubSonar3("buggy0/sonar2", &sonarMessage3);
+ros::Publisher pubSonar0("buggy0/sonar0", &sonarMessage0);                             
+ros::Publisher pubSonar1("buggy0/sonar1", &sonarMessage1);
+ros::Publisher pubSonar2("buggy0/sonar2", &sonarMessage2);
+ros::Publisher pubSonar3("buggy0/sonar3", &sonarMessage3);
+ros::Publisher pubSonar4("buggy0/sonar4", &sonarMessage4);
  
 // Create sonar objects  
-UltraSound sonar1(trigPin1, echoPin1);                                         
+UltraSound sonar0(trigPin0, echoPin0);                                         
+UltraSound sonar1(trigPin1, echoPin1);
 UltraSound sonar2(trigPin2, echoPin2);
-UltraSound sonar3(trigPin3, echoPin3);
+UltraSound sonar3(trigPin3, echoPin3);                                         
+UltraSound sonar4(trigPin4, echoPin4);
 
 void setup()
 {
@@ -71,12 +89,16 @@ void setup()
   pinMode(drivePinR, OUTPUT);
 
   // Set pin modes for sonar devices
+  pinMode(trigPin0, OUTPUT);
+  pinMode(echoPin0, INPUT);
   pinMode(trigPin1, OUTPUT);
   pinMode(echoPin1, INPUT);
   pinMode(trigPin2, OUTPUT);
   pinMode(echoPin2, INPUT);
   pinMode(trigPin3, OUTPUT);
   pinMode(echoPin3, INPUT);
+  pinMode(trigPin4, OUTPUT);
+  pinMode(echoPin4, INPUT);
 
   // Initialise values for motor pins
   digitalWrite(brakePinR, LOW);
@@ -86,37 +108,22 @@ void setup()
   
   nh.initNode();
   nh.subscribe(subDrive);
+  nh.advertise(pubSonar0);
   nh.advertise(pubSonar1);
   nh.advertise(pubSonar2);
   nh.advertise(pubSonar3);
+  nh.advertise(pubSonar4);
 }
 
 void loop()
-{
-  int pingTime1;
-  int dist1;   
-  int pingTime2;
-  int dist2;
-  int pingTime3;
-  int dist3;
-  
+{  
   nh.spinOnce();
 
-  pingTime1 = sonar1.ping();
-  pingTime2 = sonar2.ping();
-  pingTime3 = sonar3.ping();
+  publishSonar(sonar0, pubSonar0, sonarMessage0);
+  publishSonar(sonar1, pubSonar1, sonarMessage1);
+  publishSonar(sonar2, pubSonar2, sonarMessage2);
+  publishSonar(sonar3, pubSonar3, sonarMessage3);
+  publishSonar(sonar4, pubSonar4, sonarMessage4);
   
-  dist1 = sonar1.centimetersInAir(pingTime1);
-  dist2 = sonar2.centimetersInAir(pingTime2);
-  dist3 = sonar3.centimetersInAir(pingTime3);
-
-  sonarMessage1.data = dist1;  
-  sonarMessage2.data = dist2;  
-  sonarMessage3.data = dist3;  
-
-  pubSonar1.publish(&sonarMessage1);
-  pubSonar2.publish(&sonarMessage2);
-  pubSonar3.publish(&sonarMessage3);
-  
-  delay(1);
+  delay(10);
 }
