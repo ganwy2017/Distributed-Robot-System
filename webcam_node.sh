@@ -9,7 +9,7 @@ export ROS_MASTER_URI=$master_uri
 export ROS_IP=$local_ip
 export ROS_HOSTNAME=$local_ip
 
-cd catkin_ws/src/multi_tier_robot_system/src/
+cd catkin_ws/src/multi_tier_robot_system/src/nodes
 python webcam_node.py
 
 

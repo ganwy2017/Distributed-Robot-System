@@ -66,4 +66,6 @@ class Sonar(object):
         l = math.sqrt(local_x ** 2 + local_y ** 2)
         x = round(l * math.sin(angle) * scale + buggy_x, 0)
         y = round(flip * l * math.cos(angle) * scale + buggy_y, 0)
+        print "sonar"+str(self.nb)
+        print x, y
         return [x, y]                                             

@@ -38,7 +38,7 @@ def draw_axes(display, rect, origin):
     if rect[1] < origin[1] < rect[1] + rect[3]:						# If x-axis is in rectangle
         p1 = (rect[0], origin[1])
         p2 = (rect[0] + rect[2], origin[1])
-        pygame.draw.line(display, (0, 0, 0), p1, p2, 2) 			# Draw xaxis'
+        pygame.draw.line(display, (0, 0, 0), p1, p2, 2) 			# Draw x-axis
 
 
 def draw_camera(window, rect, buggy, boarder_col=(0, 0, 0), frame_width=3):

@@ -15,7 +15,7 @@ buggy0:
     number: 2
   sonar3:
     angle: 90
-    position: [6, 1]
+    position: [6, -9]
     number: 3
   sonar4:
     angle: 270
