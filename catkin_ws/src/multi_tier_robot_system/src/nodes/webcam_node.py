@@ -19,7 +19,7 @@ class CameraNode(object):
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)
-        pub_camera = rospy.Publisher(self.topic_name, Image, queue_size=1)
+        pub_camera = rospy.Publisher(self.topic_name, CompressedImage, queue_size=1)
         message = CompressedImage()
         while True:
             ret, frame = self.vc.read()													# Read frame
