@@ -2,7 +2,9 @@
 
 import cv2
 import rospy
+import numpy as np
 from sensor_msgs.msg import Image
+from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge, CvBridgeError
 
 
@@ -17,11 +19,14 @@ class CameraNode(object):
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)
-        pub_camera = rospy.Publisher(self.topic_name, Image, queue_size=1)			# Initialise publisher for motor controls
+        pub_camera = rospy.Publisher(self.topic_name, Image, queue_size=1)
+        message = CompressedImage()
         while True:
             ret, frame = self.vc.read()													# Read frame
-            camera_msg = self.bridge.cv2_to_imgmsg(frame, encoding="passthrough")		# Convert to ROS image message
-            pub_camera.publish(camera_msg)												# Publish frame
+            message.format = "jpeg"
+            message.data = np.array(cv2.imencode(".jpg", frame)[1]).tostring()
+            # message = self.bridge.cv2_to_imgmsg(frame, encoding="passthrough")		# Convert to ROS image message
+            pub_camera.publish(message)												# Publish frame
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         self.vc.release()							# Release capture

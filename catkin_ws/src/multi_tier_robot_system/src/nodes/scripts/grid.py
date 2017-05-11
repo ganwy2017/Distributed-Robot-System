@@ -50,10 +50,10 @@ class Grid(object):
 
     # Draw squares that objects have been detected in
     def _draw_occupied_cells(self, display, origin, rect, col, scale):
-        i0 = self.size / 2 - (origin[0] - rect[0]) / self.res * scale
-        j0 = self.size / 2 - (origin[1] - rect[1]) / self.res * scale + 1
-        i1 = self.size / 2 + (rect[0] + rect[2] - origin[0]) / self.res * scale
-        j1 = self.size / 2 + (rect[1] + rect[3] - origin[1]) / self.res * scale
+        i0 = self.size / 2 - (origin[0] - rect[0]) / self.res / float(scale)
+        j0 = self.size / 2 - (origin[1] - rect[1]) / self.res / float(scale) + 1
+        i1 = self.size / 2 + (rect[0] + rect[2] - origin[0]) / self.res / float(scale)
+        j1 = self.size / 2 + (rect[1] + rect[3] - origin[1]) / self.res / float(scale)
         i0, j0 = self._keep_in_grid((i0, j0))
         i1, j1 = self._keep_in_grid((i1, j1))
         for j in range(j0, j1):

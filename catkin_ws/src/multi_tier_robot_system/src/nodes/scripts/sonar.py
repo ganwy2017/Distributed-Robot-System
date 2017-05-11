@@ -54,8 +54,10 @@ class Sonar(object):
         buggy_y = buggy_pos[1]
         local_x = float(self.local_pos[0])
         local_y = float(self.local_pos[1])
-        if local_y:                                   
-            angle = math.atan(local_x / local_y) + buggy_angle
+        if local_y > 0:
+            angle = math.atan(local_x / local_y)
+        elif local_y < 0:
+            angle = math.pi + math.atan(local_x / local_y)
         else:
             if local_x > 0:
                 angle = buggy_angle + math.pi
@@ -63,9 +65,10 @@ class Sonar(object):
                 angle = buggy_angle - math.pi
             else:
                 angle = buggy_angle
+
+        if self.nb == 1:
+            print angle
         l = math.sqrt(local_x ** 2 + local_y ** 2)
         x = round(l * math.sin(angle) * scale + buggy_x, 0)
         y = round(flip * l * math.cos(angle) * scale + buggy_y, 0)
-        print "sonar"+str(self.nb)
-        print x, y
         return [x, y]                                             

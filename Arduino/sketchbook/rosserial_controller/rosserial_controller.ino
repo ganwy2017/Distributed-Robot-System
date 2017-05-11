@@ -125,5 +125,5 @@ void loop()
   publishSonar(sonar3, pubSonar3, sonarMessage3);
   publishSonar(sonar4, pubSonar4, sonarMessage4);
   
-  delay(10);
+  delay(1);
 }
