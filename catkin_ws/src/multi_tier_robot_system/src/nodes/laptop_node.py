@@ -31,7 +31,7 @@ class LaptopNode(object):
         pygame.display.set_caption("Robot Control Suite") 				    # Set caption
         self.quit = False												    # App will quit when quit is
         self.mode = "manual"
-        self.fps = 50													    # Frame rate of app
+        self.fps = 25													    # Frame rate of app
 
         # Node
         rospy.init_node("laptop", anonymous=True)

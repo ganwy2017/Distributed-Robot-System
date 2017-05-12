@@ -44,7 +44,10 @@ class Buggy(object):
         self.grid.update(self.sonars)                           # Update the grid world
 
     def get_frame(self):
-        return self.cameras[self.current_camera].get_frame()
+        if self.cameras:
+            return self.cameras[self.current_camera].get_frame()
+        else:
+            return False
 
     def _update_servo_angles(self, servo_change):
         for i, angle in enumerate(servo_change):

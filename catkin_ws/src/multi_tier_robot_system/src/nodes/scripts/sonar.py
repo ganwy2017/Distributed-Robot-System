@@ -65,9 +65,6 @@ class Sonar(object):
                 angle = buggy_angle - math.pi
             else:
                 angle = buggy_angle
-
-        if self.nb == 1:
-            print angle
         l = math.sqrt(local_x ** 2 + local_y ** 2)
         x = round(l * math.sin(angle) * scale + buggy_x, 0)
         y = round(flip * l * math.cos(angle) * scale + buggy_y, 0)

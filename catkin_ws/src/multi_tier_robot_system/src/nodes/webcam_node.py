@@ -15,12 +15,14 @@ class CameraNode(object):
         self.node_name = "camera_node"
         self.topic_name = "buggy0/camera0"
         self.bridge = CvBridge()
+        self.rate = 25
         self.main()
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)
         pub_camera = rospy.Publisher(self.topic_name, CompressedImage, queue_size=1)
         message = CompressedImage()
+        r = rospy.Rate(self.rate)
         while True:
             ret, frame = self.vc.read()													# Read frame
             message.format = "jpeg"
@@ -29,6 +31,7 @@ class CameraNode(object):
             pub_camera.publish(message)												# Publish frame
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+            r.sleep()
         self.vc.release()							# Release capture
         cv2.destroyAllWindows()						# Destroy all windows
 
