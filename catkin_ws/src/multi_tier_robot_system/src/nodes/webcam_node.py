@@ -20,14 +20,13 @@ class CameraNode(object):
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)
-        pub_camera = rospy.Publisher(self.topic_name, CompressedImage, queue_size=1)
+        pub_camera = rospy.Publisher(self.topic_name, CompressedImage)
         message = CompressedImage()
         r = rospy.Rate(self.rate)
         while True:
             ret, frame = self.vc.read()													# Read frame
             message.format = "jpeg"
             message.data = np.array(cv2.imencode(".jpg", frame)[1]).tostring()
-            # message = self.bridge.cv2_to_imgmsg(frame, encoding="passthrough")		# Convert to ROS image message
             pub_camera.publish(message)												# Publish frame
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

@@ -40,7 +40,8 @@ class Buggy(object):
             sonar.update(self.pos, self.angle)                  # Update all sonar
         self._update_servo_angles(servo_change)                 # Update the servo angles
         for servo in self.servos:
-            servo.move(self.servo_angles[servo.orientation])    # Update all servos
+            servo.move(self.servo_angles[servo.axis])           # Update all servos
+            print servo.pos
         self.grid.update(self.sonars)                           # Update the grid world
 
     def get_frame(self):
@@ -54,10 +55,10 @@ class Buggy(object):
             if angle == "reset":
                 servo_change[i] = -self.servo_angles[i]
         self.servo_angles = map(operator.add, self.servo_angles, servo_change)
-        if self.servo_angles[1] > 90:
-            self.servo_angles[1] = 90
-        elif self.servo_angles[1] < -90:
-            self.servo_angles[1] = -90
+        if self.servo_angles[0] > 90:
+            self.servo_angles[0] = 90
+        elif self.servo_angles[0] < -90:
+            self.servo_angles[0] = -90
 
     # Draw buggy given display, position on screen and scale
     def draw(self, display, pos, scale):

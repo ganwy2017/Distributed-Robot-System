@@ -86,7 +86,7 @@ class LaptopNode(object):
                 if "servo" in key:
                     servos.append(Servo(setup[key]["number"],
                                         0,
-                                        orientation=setup[key]["orientation"]))
+                                        axis=setup[key]["axis"]))
                 if "camera" in key:
                     cameras.append(Camera(setup[key]["number"],
                                    0))
@@ -102,10 +102,10 @@ class LaptopNode(object):
         pygame.display.update()
 
     def _keypress2drive(self):
-        up = self.key_status["k_up"]
-        down = self.key_status["k_down"]
-        left = self.key_status["k_left"]
-        right = self.key_status["k_right"]
+        up = self.key_status["k_w"]
+        down = self.key_status["k_s"]
+        left = self.key_status["k_a"]
+        right = self.key_status["k_d"]
         if up and not down and not left and not right:
             left = 255
             right = 255
@@ -124,21 +124,20 @@ class LaptopNode(object):
         return left, right
 
     def _keypress2servo(self):
-        if self.key_status["k_a"]:
-            yaw = -1.0
-        elif self.key_status["k_d"]:
-            yaw = 1.0
-        elif self.key_status["k_s"]:
-            yaw = "reset"
-        else:
-            yaw = 0
-        if self.key_status["k_w"]:
-            pitch = 1.0
-        elif self.key_status["k_s"]:
-            pitch = -1.0
-        else:
-            pitch = 0
-        return [pitch, yaw]
+        d_pitch = 0
+        d_yaw = 0
+        if self.key_status["k_kp4"]:
+            d_pitch = -1.0
+        elif self.key_status["k_kp6"]:
+            d_pitch = 1.0
+        if self.key_status["k_kp8"]:
+            d_yaw = 1.0
+        elif self.key_status["k_kp2"]:
+            d_yaw = -1.0
+        if self.key_status["k_kp5"]:
+            d_pitch = "reset"
+            d_yaw = "reset"
+        return [d_pitch, d_yaw]
 
     def main(self):
         self._update_window()
@@ -147,6 +146,9 @@ class LaptopNode(object):
             if self.mode == "manual":
                 left, right = self._keypress2drive()
             elif self.mode == "automatic":
+                left = 0
+                right = 0
+            elif self.mode == "roam":
                 left = 0
                 right = 0
             delta_servo_dict = self._keypress2servo()

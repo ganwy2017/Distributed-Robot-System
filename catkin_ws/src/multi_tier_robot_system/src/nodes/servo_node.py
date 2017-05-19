@@ -38,6 +38,6 @@ class ServoNode(object):
 
 if __name__ == "__main__":
     buggy_nb = 0
-    data_pins = [27]
-    servo_numbers = [0]
+    data_pins = [27, 4]
+    servo_numbers = [0, 1]
     ServoNode(servo_numbers, data_pins, buggy_nb)

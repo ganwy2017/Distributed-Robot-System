@@ -27,8 +27,10 @@ buggy0:
     number: 1
   servo0:
     number: 0
-    orientation: 1
-    pin: 27
+    axis: 0
+  servo1:
+    number: 1
+    axis: 1
   camera0:
     number: 0
     position: [0, 9]

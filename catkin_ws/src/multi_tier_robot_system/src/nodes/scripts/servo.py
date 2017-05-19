@@ -6,10 +6,10 @@ from std_msgs.msg import Float32
 
 class Servo(object):
 
-    def __init__(self, nb, buggy_nb, orientation=1):
+    def __init__(self, nb, buggy_nb, axis):
         self.pos = 0
         self.pwm = 0
-        self.orientation = orientation
+        self.axis = axis
         topic = "buggy" + str(buggy_nb) + "/servo" + str(nb)
         self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 

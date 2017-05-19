@@ -15,7 +15,7 @@ class Camera(object):
         self.get_image = GetMessage()
         self.bridge = CvBridge()
         topic = "buggy" + str(buggy_nb) + "/camera" + str(nb)
-        rospy.Subscriber(topic, CompressedImage, self.get_image, queue_size=1)
+        rospy.Subscriber(topic, CompressedImage, self.get_image, queue_size=2)
 
     def get_frame(self):
         frame = self.get_image.get_msg().data
