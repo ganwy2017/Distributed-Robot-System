@@ -28,12 +28,19 @@ buggy0:
   servo0:
     number: 0
     axis: 0
+    max: 90
+    min: -90
   servo1:
     number: 1
     axis: 1
+    max: 90
+    min: -25
   camera0:
     number: 0
     position: [0, 9]
     pitch: 0
     yaw: 0
+  gyroscope:
+    number: 0
+    axis: 0
 

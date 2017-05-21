@@ -12,17 +12,18 @@ from scripts.grid import Grid
 class Buggy(object):
 
     def __init__(self, nb=0, col=(0, 0, 0), pos=(0, 0), angle=0, res=20,
-                 sonars=None, encoders=None, servos=None, cameras=None):
+                 sonars=None, encoders=None, servos=None, cameras=None, gyroscopes=None):
         self.nb = nb                                              
         self.col = col
         self.pos = pos                                           
         self.angle = angle
-        self.grid = Grid(40, res)
+        self.grid = Grid(200, res)
         self.servo_angles = [0, 0]
         self.sonars = sonars
-        self.encoders = encoders
         self.servos = servos
         self.cameras = cameras
+        self.encoders = encoders
+        self.gyroscopes = gyroscopes
         self.current_camera = 0
         self.motors = Motors(nb)
         self.encoder_last = [encoder.read() for encoder in encoders]    # For removing offset
@@ -41,7 +42,8 @@ class Buggy(object):
         self._update_servo_angles(servo_change)                 # Update the servo angles
         for servo in self.servos:
             servo.move(self.servo_angles[servo.axis])           # Update all servos
-            print servo.pos
+        for gyroscope in self.gyroscopes:
+            print gyroscope.get_data()
         self.grid.update(self.sonars)                           # Update the grid world
 
     def get_frame(self):
@@ -55,10 +57,11 @@ class Buggy(object):
             if angle == "reset":
                 servo_change[i] = -self.servo_angles[i]
         self.servo_angles = map(operator.add, self.servo_angles, servo_change)
-        if self.servo_angles[0] > 90:
-            self.servo_angles[0] = 90
-        elif self.servo_angles[0] < -90:
-            self.servo_angles[0] = -90
+        for servo in self.servos:
+            if self.servo_angles[servo.axis] > servo.max:
+                self.servo_angles[servo.axis] = servo.max
+            elif self.servo_angles[servo.axis] < servo.min:
+                self.servo_angles[servo.axis] = servo.min
 
     # Draw buggy given display, position on screen and scale
     def draw(self, display, pos, scale):

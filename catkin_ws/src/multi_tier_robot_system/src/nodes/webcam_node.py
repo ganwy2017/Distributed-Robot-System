@@ -3,7 +3,6 @@
 import cv2
 import rospy
 import numpy as np
-from sensor_msgs.msg import Image
 from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -20,11 +19,11 @@ class CameraNode(object):
 
     def main(self):
         rospy.init_node(self.node_name, anonymous=True)
-        pub_camera = rospy.Publisher(self.topic_name, CompressedImage)
+        pub_camera = rospy.Publisher(self.topic_name, CompressedImage, queue_size=1)
         message = CompressedImage()
         r = rospy.Rate(self.rate)
         while True:
-            ret, frame = self.vc.read()													# Read frame
+            _, frame = self.vc.read()													# Read frame
             message.format = "jpeg"
             message.data = np.array(cv2.imencode(".jpg", frame)[1]).tostring()
             pub_camera.publish(message)												# Publish frame

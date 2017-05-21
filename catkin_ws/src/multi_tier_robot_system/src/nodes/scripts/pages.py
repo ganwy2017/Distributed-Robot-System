@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import cv2
+import copy
 import pygame
 import numpy as np
 from colors import light_gray
@@ -19,6 +20,7 @@ class HomePage(object):
         map_rect = (self.w * 65 / 128, self.h / 16, self.w * 59 / 128, self.h / 2)
         draw_camera(self.window, camera_rect, buggy)
         draw_map(self.window, map_rect, buggy, buggy.grid, self.scale)
+        pygame.display.update()
 
 
 def draw_map(display, rect, buggy, grid, scale=1, boarder_col=(0, 0, 0), frame_width=3):
@@ -42,9 +44,10 @@ def draw_axes(display, rect, origin):
 
 
 def draw_camera(window, rect, buggy, boarder_col=(0, 0, 0), frame_width=3):
-    frame = buggy.get_frame()
+    frame = copy.deepcopy(buggy.get_frame())
     if frame is not False:
         frame = cv2.resize(frame, (rect[2], rect[3]))
+        frame = np.fliplr(frame)
         frame = np.rot90(frame)
         surf = pygame.surfarray.make_surface(frame)
         window.blit(surf, (rect[0], rect[1]))

@@ -6,12 +6,12 @@ import rospy
 import math
 import pygame
 
-# My libraries/ Modules
+# My libraries
 import scripts.colors as colors					    # Import all colors
-import scripts.widgets as widgets  					# Import all widgets
+import scripts.widgets as widgets  					# Import all my widgets
 import scripts.pages as pages				        # Import all pages
-from scripts.fonts import blackops as font		    # Import blackops from
-from scripts.keyboard_dict import key_dict			# Import dictionary of key values
+from scripts.fonts import blackops as font		    # Import blackops and use it as the font
+from scripts.keyboard_dict import key_dict			# Import dictionary of keyboard key names
 
 # Buggy Objects
 from scripts.buggy import Buggy 				    # Import Buggy module
@@ -19,6 +19,7 @@ from scripts.sonar import Sonar 				    # Import sonar module
 from scripts.encoder import Encoder                 # Import Encoder module
 from scripts.servo import Servo                     # Import Servo module
 from scripts.camera import Camera                   # Import Camera module
+from scripts.gyroscope import Gyroscope             # Import Gyroscope module
 
 
 class LaptopNode(object):
@@ -74,23 +75,29 @@ class LaptopNode(object):
             encoders = []
             servos = []
             cameras = []
+            gyroscopes = []
             for key, value in setup.iteritems():
                 if "sonar" in key:
                     sonars.append(Sonar(setup[key]["number"],
                                         0,
                                         pos=setup[key]["position"],
                                         angle=math.radians(setup[key]["angle"])))
-                if "encoder" in key:
+                elif "encoder" in key:
                     encoders.append(Encoder(setup[key]["number"],
                                             0))
-                if "servo" in key:
+                elif "servo" in key:
                     servos.append(Servo(setup[key]["number"],
                                         0,
-                                        axis=setup[key]["axis"]))
-                if "camera" in key:
+                                        setup[key]["axis"],
+                                        setup[key]["min"],
+                                        setup[key]["max"]))
+                elif "camera" in key:
                     cameras.append(Camera(setup[key]["number"],
                                    0))
-            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos, cameras=cameras)
+                elif "gyroscope" in key:
+                    gyroscopes.append((Gyroscope(setup[key]["number"],
+                                                 0)))
+            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos, cameras=cameras, gyroscopes=gyroscopes)
 
     def _update_window(self):
         rect = (self.size[0] / 64, self.size[1] / 64, self.size[0] * 31 / 32, self.size[1] * 31 / 32)
@@ -99,7 +106,6 @@ class LaptopNode(object):
         self.current_page = widgets.tabs(self.window, self.pages, self.current_page, rect, tab_size, font(self.size[1] / 64))
         if self.current_page == "Home":
             self.home.show(self.buggy)
-        pygame.display.update()
 
     def _keypress2drive(self):
         up = self.key_status["k_w"]
@@ -127,9 +133,9 @@ class LaptopNode(object):
         d_pitch = 0
         d_yaw = 0
         if self.key_status["k_kp4"]:
-            d_pitch = -1.0
-        elif self.key_status["k_kp6"]:
             d_pitch = 1.0
+        elif self.key_status["k_kp6"]:
+            d_pitch = -1.0
         if self.key_status["k_kp8"]:
             d_yaw = 1.0
         elif self.key_status["k_kp2"]:
