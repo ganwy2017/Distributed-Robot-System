@@ -16,7 +16,7 @@ class Servo(object):
         self.publisher = rospy.Publisher(topic, Float32, queue_size=1)
 
     def _deg2pwm(self):
-        self.pwm = self.pos * 750.0 / 90.0 + 1500
+        self.pwm = self.pos * 800.0 / 90.0 + 1500
 
     # Publish servo position
     def move(self, pos):

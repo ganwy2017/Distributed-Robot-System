@@ -26,6 +26,7 @@ blue = (0, 0, 255)
 # Greens
 green = (50, 205, 50)
 pale_green = (152, 251, 152)
+lime_green = (50, 205, 50)
 # Yellows
 # Browns
 firebrick = (178, 34, 34)

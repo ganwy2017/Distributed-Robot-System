@@ -31,7 +31,6 @@ class LaptopNode(object):
         self.window = pygame.display.set_mode(self.size)				    # Initialise window for app
         pygame.display.set_caption("Robot Control Suite") 				    # Set caption
         self.quit = False												    # App will quit when quit is
-        self.mode = "manual"
         self.fps = 25													    # Frame rate of app
 
         # Node
@@ -40,7 +39,9 @@ class LaptopNode(object):
         # Initialise Pages
         self.pages = ("Home", "Settings") 								    # List of page names
         self.current_page = "Home" 										    # Current page
-        self.home = pages.HomePage(self.window, scale=1)			        # Initialise home page
+        self.home = pages.HomePage(self.window,
+                                   font,
+                                   scale=1)			                        # Initialise home page
 
         # Events
         self.key_status = {} 											    # Initialise status of keys
@@ -48,7 +49,7 @@ class LaptopNode(object):
 
         # Buggies
         self.buggy = None
-        self._create_buggies()
+        self._create_buggy()
         self.main()
 
     def _event_handler(self):
@@ -66,7 +67,7 @@ class LaptopNode(object):
                         self.key_status[key] = False				        # Update key_status dictionary
                         break
 
-    def _create_buggies(self):
+    def _create_buggy(self):
         config_file = open("config/buggy.yaml")
         config = yaml.safe_load(config_file)
         config_file.close()
@@ -80,8 +81,10 @@ class LaptopNode(object):
                 if "sonar" in key:
                     sonars.append(Sonar(setup[key]["number"],
                                         0,
-                                        pos=setup[key]["position"],
-                                        angle=math.radians(setup[key]["angle"])))
+                                        setup[key]["position"],
+                                        math.radians(setup[key]["angle"]),
+                                        setup[key]["min_dist"],
+                                        setup[key]["action"]))
                 elif "encoder" in key:
                     encoders.append(Encoder(setup[key]["number"],
                                             0))
@@ -96,8 +99,13 @@ class LaptopNode(object):
                                    0))
                 elif "gyroscope" in key:
                     gyroscopes.append((Gyroscope(setup[key]["number"],
-                                                 0)))
-            self.buggy = Buggy(sonars=sonars, encoders=encoders, servos=servos, cameras=cameras, gyroscopes=gyroscopes)
+                                                 0,
+                                                 axis=setup[key]["axis"])))
+            self.buggy = Buggy(sonars=sonars,
+                               encoders=encoders,
+                               servos=servos,
+                               cameras=cameras,
+                               gyroscopes=gyroscopes)
 
     def _update_window(self):
         rect = (self.size[0] / 64, self.size[1] / 64, self.size[0] * 31 / 32, self.size[1] * 31 / 32)
@@ -149,14 +157,11 @@ class LaptopNode(object):
         self._update_window()
         while not self.quit:
             self._event_handler()
-            if self.mode == "manual":
+            if self.buggy.mode == "Manual":
                 left, right = self._keypress2drive()
-            elif self.mode == "automatic":
-                left = 0
-                right = 0
-            elif self.mode == "roam":
-                left = 0
-                right = 0
+            elif self.buggy.mode == "Roam":
+                left = 200
+                right = 200
             delta_servo_dict = self._keypress2servo()
             self.buggy.update(left, right, delta_servo_dict)
             self._update_window()

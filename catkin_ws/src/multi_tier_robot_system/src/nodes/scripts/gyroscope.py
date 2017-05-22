@@ -8,9 +8,10 @@ from get_message import GetMessage
 
 class Gyroscope(object):
 
-    def __init__(self, nb, buggy_nb):
+    def __init__(self, nb, buggy_nb, axis=0):
         self.get_message = GetMessage()
-        topic = "buggy" + str(buggy_nb) + "/gyro" + str(nb)
+        self.axis = axis
+        topic = "buggy" + str(buggy_nb) + "/gyroscope" + str(nb)
         rospy.Subscriber(topic, String, self.get_message, queue_size=1)
 
     def get_data(self):

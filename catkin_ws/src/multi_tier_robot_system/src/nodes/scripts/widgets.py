@@ -1,5 +1,41 @@
 import pygame
+import time
 import scripts.helpers as helpers
+
+
+class Button(object):
+
+    def __init__(self, display, text, pos, size, inactive_col, active_col, font, reset_time=0.2):
+        self.last_pressed = time.time()
+        self.reset_time = reset_time
+        self.display = display
+        self.text = text
+        self.pos = pos
+        self.size = size
+        self.inactive_col = inactive_col
+        self.active_col = active_col
+        self.font = font
+
+    def show(self):
+        rect = (self.pos[0] - self.size[0] / 2,
+                self.pos[1] - self.size[1] / 2,
+                self.size[0],
+                self.size[1])
+        cur = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        pressed = False
+        within_x = self.pos[0] - self.size[0] / 2 < cur[0] < self.pos[0] + self.size[0] / 2
+        within_y = self.pos[1] - self.size[1] / 2 < cur[1] < self.pos[1] + self.size[1] / 2
+        if within_x and within_y:
+            pygame.draw.rect(self.display, self.active_col, rect)
+            if click[0] == 1:
+                if time.time() - self.last_pressed > self.reset_time:
+                    self.last_pressed = time.time()
+                    pressed = True
+        else:
+            pygame.draw.rect(self.display, self.inactive_col, rect)
+        text(self.display, self.text, (0, 0, 0), self.pos, self.font)
+        return pressed
 
 
 def text(display, message, col, pos, font):
@@ -7,22 +43,6 @@ def text(display, message, col, pos, font):
     text_rect = text_surf.get_rect()
     text_rect.center = (pos[0], pos[1])
     display.blit(text_surf, text_rect)
-
-
-def button(display, message, pos, size, inactive_col, active_col, font):
-    rect = (pos[0] - size[0] / 2, pos[1] - size[1] / 2, size[0], size[1])
-    cur = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-    pressed = False
-    if pos[0] - size[0] / 2 < cur[0] < pos[0] + size[0] / 2 \
-            and pos[1] - size[1] / 2 < cur[1] < pos[1] + size[1] / 2:
-        pygame.draw.rect(display, active_col, rect)
-        if click[0] == 1:
-            pressed = True
-    else:
-        pygame.draw.rect(display, inactive_col, rect)
-    text(display, message, (0, 0, 0), pos, font)
-    return pressed
 
 
 def tabs(display, page_list, current_page, rect, tab_size, font,

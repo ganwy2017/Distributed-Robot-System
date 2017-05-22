@@ -5,22 +5,32 @@ buggy0:
     angle: 0
     position: [0, 9]
     number: 0
+    min_dist: 10
+    action: "Reverse"
   sonar1:
     angle: 45
-    position: [6, 7]
+    position: [-6, 7]
     number: 1
+    min_dist: 10
+    action: "Right"
   sonar2:
     angle: 315
-    position: [-6, 7]
+    position: [6, 7]
     number: 2
+    min_dist: 10
+    action: "Left"
   sonar3:
-    angle: 90
+    angle: 270
     position: [6, -1]
     number: 3
+    min_dist: 10
+    action: "None"
   sonar4:
-    angle: 270
+    angle: 90
     position: [-6, -4]
     number: 4
+    min_dist: 10
+    action: "None"
   encoder0:
     number: 0
   encoder1:

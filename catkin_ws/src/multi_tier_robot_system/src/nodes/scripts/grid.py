@@ -50,7 +50,7 @@ class Grid(object):
 
     # Draw squares that objects have been detected in
     def _draw_occupied_cells(self, display, origin, rect, col, scale):
-        i0 = self.size / 2 - (origin[0] - rect[0]) / self.res / float(scale)
+        i0 = self.size / 2 - (origin[0] - rect[0]) / self.res / float(scale) + 1
         j0 = self.size / 2 - (origin[1] - rect[1]) / self.res / float(scale) + 1
         i1 = self.size / 2 + (rect[0] + rect[2] - origin[0]) / self.res / float(scale)
         j1 = self.size / 2 + (rect[1] + rect[3] - origin[1]) / self.res / float(scale)
@@ -95,17 +95,14 @@ class Grid(object):
     # Calculate cell position of obstacle
     def _ping(self, sonar):
         if sonar.data:
-            x =  sonar.global_pos[0] + sonar.data * sin(sonar.global_angle)
+            x = sonar.global_pos[0] + sonar.data * sin(sonar.global_angle)
             y = sonar.global_pos[1] + sonar.data * cos(sonar.global_angle)
             hit = self._coord2cell((x, y))
             hit = self._keep_in_grid(hit)
         else:
             hit = False
         misses = []
-        data = sonar.data
-        if not data:
-            data = 100
-        for d in range(sonar.data):
+        for d in range(0, sonar.data, 2):
             x = sonar.global_pos[0] + d * sin(sonar.global_angle)
             y = sonar.global_pos[1] + d * cos(sonar.global_angle)
             miss = self._coord2cell((x, y))

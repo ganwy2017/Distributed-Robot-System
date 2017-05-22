@@ -32,9 +32,7 @@ class ServoNode(object):
         r = rospy.Rate(self.rate)
         while True:
             r.sleep()
-        # for pin in self.data_pins:
-        #     self.pi.set_servo_pulsewidth(pin, 0)
-        # self.pi.stop()
+
 
 if __name__ == "__main__":
     buggy_nb = 0

@@ -4,15 +4,35 @@ import cv2
 import copy
 import pygame
 import numpy as np
-from colors import light_gray
+import scripts.widgets as widgets
+import colors
 
 
 class HomePage(object):
 
-    def __init__(self, window, scale=1):
+    def __init__(self, window, font, scale=1):
         self.window = window
+        self.font = font
         self.w, self.h = window.get_size()
         self.scale = scale
+        self.plus_button = widgets.Button(self.window, "+",
+                                     (self.w * 5.0 / 8, 5.0 / 8 * self.h),
+                                     (self.w / 16, self.h / 16),
+                                     colors.gray,
+                                     colors.light_gray,
+                                     self.font(self.h / 32))
+        self.minus_button = widgets.Button(self.window, "-",
+                                       (self.w * 7.0 / 8, 5.0 / 8 * self.h),
+                                       (self.w / 16, self.h / 16),
+                                       colors.gray,
+                                       colors.light_gray,
+                                       self.font(self.h / 32))
+        self.mode_button = widgets.Button(self.window, "",
+                                       (self.w * 3.0 / 4, 6.0 / 8 * self.h),
+                                       (self.w / 8, self.h / 16),
+                                       colors.green,
+                                       colors.pale_green,
+                                       self.font(self.h / 32))
 
     # Show home page
     def show(self, buggy):
@@ -20,13 +40,42 @@ class HomePage(object):
         map_rect = (self.w * 65 / 128, self.h / 16, self.w * 59 / 128, self.h / 2)
         draw_camera(self.window, camera_rect, buggy)
         draw_map(self.window, map_rect, buggy, buggy.grid, self.scale)
+        self._handle_buttons(buggy)
         pygame.display.update()
+
+    def _handle_buttons(self, buggy):
+        widgets.text(self.window, "Zoom",
+                     colors.black,
+                     (self.w * 3.0 / 4, 5.0 / 8 * self.h),
+                     self.font(self.h / 32))
+        plus = self.plus_button.show()
+        minus = self.minus_button.show()
+        mode = self.mode_button.show()
+        if mode:
+            i = buggy.modes.index(buggy.mode)
+            i += 1
+            if i >= len(buggy.modes):
+                i = 0
+            buggy.mode = buggy.modes[i]
+        self.mode_button.text = buggy.mode
+
+        if plus:
+            self.scale += 0.2
+        elif minus:
+            self.scale -= 0.2
+        self._limit_scale()
+
+    def _limit_scale(self):
+        if self.scale < 0.6:
+            self.scale = 0.6
+        elif self.scale > 3.4:
+            self.scale = 3.4
 
 
 def draw_map(display, rect, buggy, grid, scale=1, boarder_col=(0, 0, 0), frame_width=3):
     centre = (rect[0] + rect[2] / 2, rect[1] + rect[3] / 2) 						# Centre of map window
-    origin = (centre[0] + buggy.pos[0] * scale, centre[1] + buggy.pos[1] * scale) 	# Coordinates of map origin
-    grid.draw(display, origin, rect, scale=scale, line_col=light_gray)				# Draw grid world
+    origin = (centre[0] - buggy.pos[0] * scale, centre[1] + buggy.pos[1] * scale) 	# Coordinates of map origin
+    grid.draw(display, origin, rect, scale=scale, line_col=colors.light_gray)	    # Draw grid world
     draw_axes(display, rect, origin) 												# Draw axis (based on origin)
     pygame.draw.rect(display, boarder_col, rect, frame_width)						# Draw window frame
     buggy.draw(display, centre, scale)
