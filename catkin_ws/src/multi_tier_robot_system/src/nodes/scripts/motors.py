@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import rospy
-import time
 from multi_tier_robot_system.msg import Drive
 
 
@@ -12,6 +11,7 @@ class Motors(object):
         self.right = 0
         self.left_dir = True
         self.right_dir = True
+        self.message_id = 0
         self.message = Drive()
         topic = "buggy" + str(nb) + "/drive"
         self.publisher = rospy.Publisher(topic, Drive, queue_size=1)
@@ -23,8 +23,11 @@ class Motors(object):
         self.message.right = self.right
         self.message.left_dir = self.left_dir
         self.message.right_dir = self.right_dir
-        self.message.timestamp = int(time.time() * 1000)
+        self.message.id = self.message_id
         self.publisher.publish(self.message)
+        self.message_id += 1
+        if self.message_id == 100:
+            self.message_id = 1
 
     # Update attributes given left and right motor speeds
     def _update(self, left, right):

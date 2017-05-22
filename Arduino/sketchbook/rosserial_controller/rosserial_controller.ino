@@ -35,12 +35,18 @@
 #define trigPin4 A2
 #define echoPin4 A3
 
+int tLast = 0;
+
 void driveCallback(const multi_tier_robot_system::Drive& message)
 {
-  digitalWrite(dirPinL, message.left_dir);
-  digitalWrite(dirPinR, message.right_dir);
-  analogWrite(drivePinL, message.left);
-  analogWrite(drivePinR, message.right);
+  if (tLast == 0)
+  { 
+    digitalWrite(dirPinL, message.left_dir);
+    digitalWrite(dirPinR, message.right_dir);
+    analogWrite(drivePinL, message.left);
+    analogWrite(drivePinR, message.right);
+    //tLast == message.id;
+  }
 }
 
 void publishSonar(UltraSound& sonar, ros::Publisher& pub, std_msgs::Int32& message)

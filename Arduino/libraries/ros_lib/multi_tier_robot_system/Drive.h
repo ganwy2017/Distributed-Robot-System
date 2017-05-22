@@ -20,12 +20,15 @@ namespace multi_tier_robot_system
       _left_dir_type left_dir;
       typedef bool _right_dir_type;
       _right_dir_type right_dir;
+      typedef uint8_t _id_type;
+      _id_type id;
 
     Drive():
       left(0),
       right(0),
       left_dir(0),
-      right_dir(0)
+      right_dir(0),
+      id(0)
     {
     }
 
@@ -50,6 +53,8 @@ namespace multi_tier_robot_system
       u_right_dir.real = this->right_dir;
       *(outbuffer + offset + 0) = (u_right_dir.base >> (8 * 0)) & 0xFF;
       offset += sizeof(this->right_dir);
+      *(outbuffer + offset + 0) = (this->id >> (8 * 0)) & 0xFF;
+      offset += sizeof(this->id);
       return offset;
     }
 
@@ -76,11 +81,13 @@ namespace multi_tier_robot_system
       u_right_dir.base |= ((uint8_t) (*(inbuffer + offset + 0))) << (8 * 0);
       this->right_dir = u_right_dir.real;
       offset += sizeof(this->right_dir);
+      this->id =  ((uint8_t) (*(inbuffer + offset)));
+      offset += sizeof(this->id);
      return offset;
     }
 
     const char * getType(){ return "multi_tier_robot_system/Drive"; };
-    const char * getMD5(){ return "cc315fdef9b03fd8f24388694d69978e"; };
+    const char * getMD5(){ return "62d0da1a5f11f9d7e3811cc797a962f7"; };
 
   };
 
