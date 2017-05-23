@@ -14,12 +14,12 @@ class EncoderNode(object):
         self.n = len(clk)                                           # Number of encoders
         self.clk = clk                                              # Set CLK pin 
         self.dt = dt                                                # Set DT pin
+        self._setup_pins()                                          # Set pin modes
         self.clk_last = [GPIO.input(pin) for pin in self.clk]       # Initialise state of each clk
         self.counter = [0] * self.n                                 # Initialise counter
         self.rate = 400                                             # Frequency
         self.publishers = []                                        # Initialise list of publishers
         rospy.init_node(node_name, anonymous=True)                  # Initialise node
-        self._setup_pins()                                          # Set pin modes
         self._setup_publishers(buggy_nb)
 
     def _setup_publishers(self, buggy_nb):
