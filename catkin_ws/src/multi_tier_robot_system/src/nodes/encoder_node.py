@@ -14,19 +14,25 @@ class EncoderNode(object):
         self.n = len(clk)                                           # Number of encoders
         self.clk = clk                                              # Set CLK pin 
         self.dt = dt                                                # Set DT pin
-        self.setup_pins()                                           # Set pin modes
         self.clk_last = [GPIO.input(pin) for pin in self.clk]       # Initialise state of each clk
-        self.node_name = node_name                                  # Set node name
         self.counter = [0] * self.n                                 # Initialise counter
         self.rate = 400                                             # Frequency
-        self.main()
+        self.publishers = []                                        # Initialise list of publishers
+        rospy.init_node(node_name, anonymous=True)                  # Initialise node
+        self._setup_pins()                                          # Set pin modes
+        self._setup_publishers(buggy_nb)
 
-    def setup_pins(self):
+    def _setup_publishers(self, buggy_nb):
+        for i in range(self.n):                                     # Fill list of publishers
+            topic = "buggy" + str(buggy_nb) + "/encoder" + str(i)
+            self.publishers.append(rospy.Publisher(topic, Int64, queue_size=1))
+
+    def _setup_pins(self):
         GPIO.setmode(GPIO.BCM)                                      # Use BCM numbering system
         GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # Set CLK pins to input
         GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)    # Set DT pins to input
 
-    def encoder(self):
+    def _encoder(self):
         for i in range(self.n):
             clk_state = GPIO.input(self.clk[i])             # Read clk
             dt_state = GPIO.input(self.dt[i])               # Read dt
@@ -38,24 +44,20 @@ class EncoderNode(object):
             self.clk_last[i] = clk_state                    # Update last state
         
     def main(self):
-        rospy.init_node(self.node_name, anonymous=True)     # Initialise node
-        publishers = []                                     # Initialise list of publishers
-        for i in range(self.n):                             # Fill list of publishers
-            topic = "buggy" + str(buggy_nb) + "/encoder" + str(i)
-            publishers.append(rospy.Publisher(topic, Int64, queue_size=1))
         r = rospy.Rate(self.rate)
         try:
             while True:
-                self.encoder()                              # Check encoders
-                for publisher, count in zip(publishers, self.counter):
-                    publisher.publish(count)                # Publish message
+                self._encoder()                                      # Check encoders
+                for publisher, count in zip(self.publishers, self.counter):
+                    publisher.publish(count)                        # Publish message
                 r.sleep()
         finally:
-            GPIO.cleanup()                                  # Return channels to defaults
+            GPIO.cleanup()                                          # Return channels to defaults
 
         
 if __name__ == "__main__":
-    buggy_nb = 0
-    clk = [17, 23]                                          # [Left encoder pin, right encoder pin]
-    dt = [18, 22]                                           # [Left encoder pin, right encoder pin]
-    EncoderNode(clk, dt, buggy_nb)
+    buggy_number = 0
+    clk_pins = [17, 23]                                             # [Left encoder pin, right encoder pin]
+    dt_pins = [18, 22]                                              # [Left encoder pin, right encoder pin]
+    en = EncoderNode(clk_pins, dt_pins, buggy_number)
+    en.main()

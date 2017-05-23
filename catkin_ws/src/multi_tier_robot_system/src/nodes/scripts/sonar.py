@@ -13,7 +13,6 @@ import colors
 class Sonar(object):
 
     def __init__(self, nb, buggy_nb, pos, angle, min_dist=10, action="None", eff_angle=0.17, col=colors.lime_green):
-        self.nb = nb
         self.col = col
         self.min_dist = min_dist
         self.action = action
@@ -22,16 +21,15 @@ class Sonar(object):
         self.local_angle = angle                        # Angle relative to the buggy (rad)
         self.global_angle = angle                       # Angle of the sensor in the world frame (rad)
         self.eff_angle = eff_angle                      # Effective angle of sonar (rad)
-        self.buggy_nb = buggy_nb                        # Buggy id number
         self.data = 0                                   # Measured value of sensor (cm)
-        self._callback = GetMessage()
+        self.get_message = GetMessage()
         topic = "buggy" + str(buggy_nb) + "/sonar" + str(nb)
-        rospy.Subscriber(topic, Int32, self._callback)
+        rospy.Subscriber(topic, Int32, self.get_message)
         
     def update(self, buggy_pos, buggy_angle):
         self.global_pos = self._transform(buggy_pos, buggy_angle)
         self.global_angle = -(self.local_angle + buggy_angle)
-        self.data = self._callback.get_msg().data
+        self.data = self.get_message.get_msg().data
 
     def draw(self, display, buggy_pos, buggy_angle, scale=1):
         pos = self._transform(buggy_pos, buggy_angle, scale=scale, flip=True)

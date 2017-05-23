@@ -50,7 +50,6 @@ class LaptopNode(object):
         # Buggies
         self.buggy = None
         self._create_buggy()
-        self.main()
 
     def _event_handler(self):
         for event in pygame.event.get():							        # Get all pygame events
@@ -135,7 +134,7 @@ class LaptopNode(object):
         else:
             left = 0
             right = 0
-        return left, right
+        return [left, right]
 
     def _keypress2servo(self):
         d_pitch = 0
@@ -158,14 +157,14 @@ class LaptopNode(object):
         while not self.quit:
             self._event_handler()
             if self.buggy.mode == "Manual":
-                left, right = self._keypress2drive()
+                drive_cmd = self._keypress2drive()
             elif self.buggy.mode == "Roam":
-                left = 200
-                right = 200
-            delta_servo_dict = self._keypress2servo()
-            self.buggy.update(left, right, delta_servo_dict)
+                drive_cmd = [200, 200]
+            servo_cmd = self._keypress2servo()
+            self.buggy.update(drive_cmd, servo_cmd)
             self._update_window()
 
 
 if __name__ == "__main__":
-    LaptopNode()
+    ln = LaptopNode()
+    ln.main()

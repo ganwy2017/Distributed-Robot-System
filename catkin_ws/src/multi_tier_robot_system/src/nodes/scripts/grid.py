@@ -90,7 +90,7 @@ class Grid(object):
     def _coord2cell(self, pos):
         i = int(pos[0] / self.res + self.size / 2)
         j = int(self.size / 2 - pos[1] / self.res)
-        return (i, j)
+        return [i, j]
 
     # Calculate cell position of obstacle
     def _ping(self, sonar):

@@ -52,12 +52,14 @@ class HomePage(object):
         minus = self.minus_button.show()
         mode = self.mode_button.show()
         if mode:
-            i = buggy.modes.index(buggy.mode)
-            i += 1
+            i = buggy.modes.index(buggy.mode) + 1
             if i >= len(buggy.modes):
                 i = 0
             buggy.mode = buggy.modes[i]
-        self.mode_button.text = buggy.mode
+        i = (buggy.modes.index(buggy.mode)) + 1
+        if i >= len(buggy.modes):
+            i = 0
+        self.mode_button.text = buggy.modes[i]
 
         if plus:
             self.scale += 0.2

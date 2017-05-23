@@ -2,7 +2,7 @@
 
 import threading
 import copy
-4
+
 
 class GetMessage(object):
 

@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 
-import pygame
-import numpy as np
 import math
+import numpy as np
 import operator
+import pygame
 
-from scripts.motors import Motors
 from scripts.grid import Grid
+from scripts.motors import Motors
 
 
 def action2drive(action):
     if action == "Reverse":
-        return -255, -255
+        return [-255, -255]
     elif action == "Left":
-        return -255, 255
+        return [-255, 255]
     elif action == "Right":
-        return 255, -255
+        return [255, -255]
     elif action == "Forward":
-        return 255, 255
+        return [255, 255]
     else:
-        return 0, 0
+        return [0, 0]
 
 
 class Buggy(object):
@@ -32,7 +32,6 @@ class Buggy(object):
         self.angle = angle
         self.mode = "Manual"
         self.modes = ["Manual", "Roam"]
-        self.pos = [0, 0]
         self.grid = Grid(100, res)
         self.servo_angles = [0, 0]
         self.sonars = sonars
@@ -45,21 +44,32 @@ class Buggy(object):
         self.encoder_last = [encoder.read() for encoder in encoders]    # For removing offset
         self.body = ((-6, -9), (6, -9), (6, 9), (-6, 9)) 
     
-    def update(self, left, right, servo_change):
-        action = self._check_sonar_actions()
+    def update(self, drive_cmd, servo_cmd):
+        action = self._check_for_override()
         if action != "None":
-            left, right = action2drive(action)
-        self.motors.drive(left, right)                          # Publish motor control (drive)
-        disp = self._get_displacement()                         # Calculate total displacement
-        x = disp * math.sin(-self.angle)                        # Calculate displacement in x
-        y = disp * math.cos(-self.angle)                        # Calculate displacement in y
-        self.pos = [self.pos[0] + x, self.pos[1] + y]           # Calculate the position of the buggy
+            drive_cmd = action2drive(action)
+        self.motors.drive(drive_cmd)                                    # Publish motor control (drive)
+        disp = self._get_displacement()                                 # Calculate total displacement
+        x = disp * math.sin(-self.angle)                                # Calculate displacement in x
+        y = disp * math.cos(-self.angle)                                # Calculate displacement in y
+        self.pos = [self.pos[0] + x, self.pos[1] + y]                   # Calculate the position of the buggy
         self._update_sonars()
-        self._update_servos(servo_change)                       # Update the servo angles
+        self._update_servos(servo_cmd)                                  # Update the servo angles
         self._update_gyroscopes()
-        self.grid.update(self.sonars)                           # Update the grid
+        self.grid.update(self.sonars)                                   # Update the grid
 
-    def _check_sonar_actions(self):
+    def draw(self, display, pos, scale):
+        outline = self._transform(pos, scale)
+        pygame.draw.polygon(display, self.col, outline)
+        self._draw_sonar(display, pos, scale)
+
+    def get_frame(self):
+        if self.cameras:
+            return self.cameras[self.current_camera].get_frame()
+        else:
+            return False
+
+    def _check_for_override(self):
         for sonar in self.sonars:
             if sonar.action != "None":
                 if sonar.data < sonar.min_dist and sonar.data != 0:
@@ -73,17 +83,11 @@ class Buggy(object):
                 if ch in data:
                     data = data.replace(ch, '')
             data = data.split(',')
-            self.angle = float(data[gyroscope.axis])
+            self.angle = -float(data[gyroscope.axis])
 
     def _update_sonars(self):
         for sonar in self.sonars:
             sonar.update(self.pos, self.angle)                  # Update all sonar
-
-    def get_frame(self):
-        if self.cameras:
-            return self.cameras[self.current_camera].get_frame()
-        else:
-            return False
 
     def _update_servos(self, servo_change):
         for i, angle in enumerate(servo_change):
@@ -96,11 +100,6 @@ class Buggy(object):
             elif self.servo_angles[servo.axis] < servo.min:
                 self.servo_angles[servo.axis] = servo.min
             servo.move(self.servo_angles[servo.axis])                           # Update all servos
-
-    def draw(self, display, pos, scale):
-        outline = self._transform(pos, scale)                    
-        pygame.draw.polygon(display, self.col, outline)        
-        self._draw_sonar(display, pos, scale)                     
 
     def _draw_sonar(self, display, pos, scale):
         for sonar in self.sonars:
@@ -125,7 +124,7 @@ class Buggy(object):
     def _get_displacement(self):
         twisting = self.motors.left_dir != self.motors.right_dir
         encoder_data = [float(encoder.read()) for encoder in self.encoders]
-        encoder_step = [float(encoder.step) for encoder in self.encoders]
+        encoder_step = [float(encoder.dist_per_tick) for encoder in self.encoders]
         if twisting: 
             self.encoder_last = encoder_data
             disp = 0
