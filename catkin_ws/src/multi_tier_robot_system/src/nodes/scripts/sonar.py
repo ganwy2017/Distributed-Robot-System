@@ -35,15 +35,17 @@ class Sonar(object):
         pos = self._transform(buggy_pos, buggy_angle, scale=scale, flip=True)
         angle = self.global_angle
         pos = [int(n) for n in pos]
-        pygame.draw.circle(display, self.col, pos, int(2 * scale))                       # Draw sensor
+        pygame.draw.circle(display, self.col, pos, int(2 * scale))                          # Draw sensor
+        # NB: For low data values, drawing an arc is impossible
         if self.data > 5:
-            data = self.data * scale
-            rect = (pos[0] - data, pos[1] - data, 2 * data, 2 * data)
-            start_angle = - self.eff_angle - angle + math.pi / 2
+            data = self.data * scale                                                        # Scale sensor value with GUI
+            rect = (pos[0] - data, pos[1] - data, 2 * data, 2 * data)                       # Calculate rect of arc
+            start_angle = - self.eff_angle - angle + math.pi / 2                            # Depends of effective angle
             end_angle = self.eff_angle - angle + math.pi / 2
-            pygame.draw.arc(display, self.col, rect, start_angle, end_angle, 2)     # Draw sensor arc  
+            pygame.draw.arc(display, self.col, rect, start_angle, end_angle, 2)             # Draw sensor arc
 
     def _transform(self, buggy_pos, buggy_angle, scale=1, flip=False):
+        # Return position of sonar given buggy orientation and local sonar coordinates
         if flip:                                            # Flip argument is for drawing sonar position flipped vertically
             flip = -1
         else:

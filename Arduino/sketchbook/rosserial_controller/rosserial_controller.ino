@@ -4,10 +4,9 @@
  * 
  * This program will publish data in cm from three sonar devices 
  * This program subscribes to a message called drive from a buggy and uses this to control two motors 
- * 
- * Todo: drive must be unique to control multiple buggies... 
  */
 
+// Third party pibraries
 #include <ros.h>
 #include <std_msgs/Int32.h>
 
@@ -35,7 +34,9 @@
 #define trigPin4 A2
 #define echoPin4 A3
 
-int counter = 0;
+// Counter for safe-guarding against disconnection
+// If counter falls to zero, motors will stop
+int counter = 0;    
 
 void driveCallback(const multi_tier_robot_system::Drive& message)
 {
@@ -43,15 +44,15 @@ void driveCallback(const multi_tier_robot_system::Drive& message)
     digitalWrite(dirPinR, message.right_dir);
     analogWrite(drivePinL, message.left);
     analogWrite(drivePinR, message.right);
-    counter = 10; 
+    counter = 10;   
 }
 
 void publishSonar(UltraSound& sonar, ros::Publisher& pub, std_msgs::Int32& message)
 {
-  int pingTime = sonar.ping();
-  int distance = sonar.centimetersInAir(pingTime);
-  message.data = distance;  
-  pub.publish(&message);
+  int pingTime = sonar.ping();                            // Ping sonar device                     
+  int distance = sonar.centimetersInAir(pingTime);        // Convert ping time into distnace
+  message.data = distance;                                // Set message data to distance value
+  pub.publish(&message);                                  // Publish sonar data
 }
 
 // Init ROS node
@@ -110,7 +111,7 @@ void setup()
   digitalWrite(dirPinR, HIGH);
   
   nh.initNode();
-  nh.subscribe(subDrive);
+  nh.subscribe(subDrive);       
   nh.advertise(pubSonar0);
   nh.advertise(pubSonar1);
   nh.advertise(pubSonar2);
@@ -122,7 +123,8 @@ void loop()
 {  
   nh.spinOnce();
 
-  publishSonar(sonar0, pubSonar0, sonarMessage0);
+  // Get and publish data for each sonar device
+  publishSonar(sonar0, pubSonar0, sonarMessage0); 
   publishSonar(sonar1, pubSonar1, sonarMessage1);
   publishSonar(sonar2, pubSonar2, sonarMessage2);
   publishSonar(sonar3, pubSonar3, sonarMessage3);

@@ -20,11 +20,11 @@ class EncoderNode(object):
         self.rate = 400                                             # Frequency
         self.publishers = []                                        # Initialise list of publishers
         rospy.init_node(node_name, anonymous=True)                  # Initialise node
-        self._setup_publishers(buggy_nb)
+        self._setup_publishers(buggy_nb)                            # Create publishers
 
     def _setup_publishers(self, buggy_nb):
         for i in range(self.n):                                     # Fill list of publishers
-            topic = "buggy" + str(buggy_nb) + "/encoder" + str(i)
+            topic = "buggy" + str(buggy_nb) + "/encoder" + str(i)   # Topic name depends on buggy_nb and the encoder number
             self.publishers.append(rospy.Publisher(topic, Int64, queue_size=1))
 
     def _setup_pins(self):

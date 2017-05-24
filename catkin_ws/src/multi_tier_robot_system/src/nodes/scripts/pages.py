@@ -48,10 +48,10 @@ class HomePage(object):
                      colors.black,
                      (self.w * 3.0 / 4, 5.0 / 8 * self.h),
                      self.font(self.h / 32))
-        plus = self.plus_button.show()
-        minus = self.minus_button.show()
-        mode = self.mode_button.show()
-        if mode:
+        self.plus_button.show()
+        self.minus_button.show()
+        self.mode_button.show()
+        if self.mode_button.pressed:
             i = buggy.modes.index(buggy.mode) + 1
             if i >= len(buggy.modes):
                 i = 0
@@ -61,9 +61,9 @@ class HomePage(object):
             i = 0
         self.mode_button.text = buggy.modes[i]
 
-        if plus:
+        if self.plus_button.pressed:
             self.scale += 0.2
-        elif minus:
+        elif self.minus_button.pressed:
             self.scale -= 0.2
         self._limit_scale()
 
@@ -84,14 +84,14 @@ def draw_map(display, rect, buggy, grid, scale=1, boarder_col=(0, 0, 0), frame_w
 
 
 def draw_axes(display, rect, origin):
-    if rect[0] < origin[0] < rect[0] + rect[2]:   		 			# If y-axis is in rectangle
+    if rect[0] < origin[0] < rect[0] + rect[2]:   		 			                # If y-axis is in rectangle
         p1 = (origin[0], rect[1])
         p2 = (origin[0], rect[1] + rect[3])
-        pygame.draw.line(display, (0, 0, 0), p1, p2, 2)				# Draw y-axis
-    if rect[1] < origin[1] < rect[1] + rect[3]:						# If x-axis is in rectangle
+        pygame.draw.line(display, colors.black, p1, p2, 2)				            # Draw y-axis
+    if rect[1] < origin[1] < rect[1] + rect[3]:						                # If x-axis is in rectangle
         p1 = (rect[0], origin[1])
         p2 = (rect[0] + rect[2], origin[1])
-        pygame.draw.line(display, (0, 0, 0), p1, p2, 2) 			# Draw x-axis
+        pygame.draw.line(display, colors.black, p1, p2, 2) 			                # Draw x-axis
 
 
 def draw_camera(window, rect, buggy, boarder_col=(0, 0, 0), frame_width=3):

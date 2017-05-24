@@ -15,6 +15,7 @@ class Button(object):
         self.inactive_col = inactive_col
         self.active_col = active_col
         self.font = font
+        self.pressed = False
 
     def show(self):
         rect = (self.pos[0] - self.size[0] / 2,
@@ -35,7 +36,7 @@ class Button(object):
         else:
             pygame.draw.rect(self.display, self.inactive_col, rect)
         text(self.display, self.text, (0, 0, 0), self.pos, self.font)
-        return pressed
+        self.pressed = pressed
 
 
 def text(display, message, col, pos, font):
