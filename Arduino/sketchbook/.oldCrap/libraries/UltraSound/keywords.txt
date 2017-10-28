@@ -1,3 +1,0 @@
-UltraSound	KEYWORD1
-ping	KEYWORD2
-microsecondsToCentimeters	KEYWORD2

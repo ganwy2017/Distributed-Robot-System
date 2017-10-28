@@ -1,2 +1,0 @@
-Encoder	KEYWORD1
-update	KEYWORD2

@@ -1,6 +1,0 @@
-Drive	KEYWORD1
-brake	KEYWORD2
-reverse	KEYWORD2
-twistRight	KEYWORD2
-twistLeft	KEYWORD2
-forward	KEYWORD2
