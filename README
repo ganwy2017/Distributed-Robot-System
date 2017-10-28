@@ -1,2 +1,0 @@
-Shell scripts in this directory are used to run each node. 
-encoder_node, serial_node, servo_node and webcam_node requre a commandline argument detialing the ip of ros master 
