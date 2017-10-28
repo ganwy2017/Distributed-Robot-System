@@ -4,3 +4,5 @@ catkin_ws/build/
 catkin_ws/install/
 catkin_ws/src/CMakeLists.txt
 catkin_ws/.catkin_workspace
+
+.idea
